@@ -1,4 +1,4 @@
-package com.wirecard.accept.activities;
+package com.wirecard.accept.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
