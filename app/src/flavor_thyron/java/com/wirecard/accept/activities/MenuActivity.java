@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
+import com.wirecard.accept.dialogs.PaymentFlowDialogs;
 
 import java.util.List;
 
@@ -20,7 +21,10 @@ import de.wirecard.accept.sdk.backend.AcceptFirmwareVersion;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import de.wirecard.accept.sdk.model.TerminalInfo;
 import rx.Observable;
+import rx.Single;
+import rx.SingleSubscriber;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 /**
@@ -31,6 +35,7 @@ public class MenuActivity extends AbstractMenuActivity {
     private static final String TAG = "AbstractMenuActivity";
     private PaymentFlowController.Device device;
     private AcceptFirmwareVersion currentVersionDataFormBackend;
+    private Subscription firmwareCheckTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +86,11 @@ public class MenuActivity extends AbstractMenuActivity {
 //>>> prepare data phase <<<
                 //this shows selector...bud this is usually done in your app... just demo app have to handle it before, because we need current used Device
                 PaymentFlowDialogs.showTerminalChooser(MenuActivity.this, list,
-
-                        new PaymentFlowDialogs.DeviceToStringConverter<PaymentFlowController.Device>() {
-                            @Override
-                            public String displayNameForDevice(PaymentFlowController.Device device) {
-                                if (TextUtils.isEmpty(device.displayName)) {
-                                    return device.id;
-                                }
-                                return device.displayName;
+                        device1 -> {
+                            if (TextUtils.isEmpty(device1.displayName)) {
+                                return device1.id;
                             }
+                            return device1.displayName;
                         },
                         new PaymentFlowDialogs.TerminalChooserListener<PaymentFlowController.Device>() {
                             @Override
@@ -114,7 +115,7 @@ public class MenuActivity extends AbstractMenuActivity {
                                         Toast.makeText(getApplicationContext(), "Installed Configuration files check succesfull. Continue", Toast.LENGTH_LONG).show();
 
 //>>> start of firmware update<<<
-                                        //start assync task for checking firmware version on server
+                                        //start async task for checking firmware version on server
                                         //new FirmwareCheckTask().execute();
                                         firmwareCheckTask();
                                     }
@@ -149,30 +150,21 @@ public class MenuActivity extends AbstractMenuActivity {
     private void firmwareCheckTask() {
         //pre execute
         Toast.makeText(getApplicationContext(), "Started firmware version check assync task", Toast.LENGTH_LONG).show();
-        Observable.create((Subscriber<? super AcceptBackendService.Response<AcceptFirmwareVersion, Void>> subscriber) -> {
+        Single.create((SingleSubscriber<? super AcceptBackendService.Response<AcceptFirmwareVersion, Void>> subscriber) -> {
             AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);//clear remembered data
-            subscriber.onNext(AcceptSDK.fetchFirmwareVersionInfo());//setup new data and remember
-            subscriber.onCompleted();
-        }).subscribeOn(Schedulers.newThread()).subscribe(new Subscriber<AcceptBackendService.Response<AcceptFirmwareVersion, Void>>() {
-            @Override
-            public void onCompleted() {
-                Toast.makeText(getApplicationContext(), "Firmware version check done", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage());
-                Toast.makeText(getApplicationContext(), "Something went wrong try please again", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNext(AcceptBackendService.Response<AcceptFirmwareVersion, Void> firmwareVersion) {
-                if (firmwareVersion == null || firmwareVersion.hasError()) {
-                    Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_LONG).show();
-                    return;
+            AcceptBackendService.Response<AcceptFirmwareVersion, Void> ret = AcceptSDK.fetchFirmwareVersionInfo();
+            if (ret == null || ret.hasError()) {
+                if (ret != null) {
+                    subscriber.onError(new Throwable(ret.getError().toString()));
+                } else {
+                    subscriber.onError(new Throwable("Null response"));
                 }
-//
-                currentVersionDataFormBackend = firmwareVersion.getBody();
+            }
+            subscriber.onSuccess(ret);//setup new data and remember
+        }).subscribeOn(Schedulers.newThread()).subscribe(new SingleSubscriber<AcceptBackendService.Response<AcceptFirmwareVersion, Void>>() {
+            @Override
+            public void onSuccess(AcceptBackendService.Response<AcceptFirmwareVersion, Void> value) {
+                currentVersionDataFormBackend = value.getBody();
                 if (currentVersionDataFormBackend == null || TextUtils.isEmpty(currentVersionDataFormBackend.url)) {
                     Toast.makeText(getApplicationContext(), "Please check your settings, current version from backend have wrong data", Toast.LENGTH_LONG).show();
                 } else {
@@ -188,9 +180,25 @@ public class MenuActivity extends AbstractMenuActivity {
                     }
                 }
             }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage());
+                Toast.makeText(getApplicationContext(), "Something went wrong try please again", Toast.LENGTH_LONG).show();
+            }
+
         });
     }
-//   private class FirmwareCheckTask extends AsyncTask<String, String, AcceptBackendService.Response<AcceptFirmwareVersion, Void>> {
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        firmwareCheckTask.unsubscribe();
+        if(firmwareCheckTask != null) {
+            firmwareCheckTask = null;
+        }
+    }
+    //   private class FirmwareCheckTask extends AsyncTask<String, String, AcceptBackendService.Response<AcceptFirmwareVersion, Void>> {
 //
 //        protected void onPreExecute() {
 //            Toast.makeText(getApplicationContext(), "Started firmware version check assync task", Toast.LENGTH_LONG).show();
