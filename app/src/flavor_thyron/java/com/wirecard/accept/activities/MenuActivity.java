@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.dialogs.PaymentFlowDialogs;
+import com.wirecard.accept.help.Constants;
 
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class MenuActivity extends AbstractMenuActivity {
 
     private void showFirmwareActivity() {
         startActivityForResult(new Intent(this, FirmwareUpdateActivity.class)
-                .putExtra(FirmwareUpdateActivity.EXTRA_SELECTED_DEVICE, new ThyronDevice(device.id))
+                .putExtra(Constants.EXTRA_SELECTED_DEVICE, new ThyronDevice(device.id))
                 , REQUEST_FIRMWARE_UPDATE);
     }
 
@@ -193,8 +194,8 @@ public class MenuActivity extends AbstractMenuActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        firmwareCheckTask.unsubscribe();
         if(firmwareCheckTask != null) {
+            firmwareCheckTask.unsubscribe();
             firmwareCheckTask = null;
         }
     }
