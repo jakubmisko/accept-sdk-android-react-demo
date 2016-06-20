@@ -27,7 +27,7 @@ public class LoginActivity extends Activity {
         String wrongSdkConfig = app.getErrorMessage();
         if (!TextUtils.isEmpty(wrongSdkConfig)) {
             Intent intent = new Intent(this, WrongAcceptSettingsActivity.class);
-            intent.putExtra(Constants.text, wrongSdkConfig);
+            intent.putExtra(Constants.TEXT, wrongSdkConfig);
             startActivity(intent);
             finish();
             return;

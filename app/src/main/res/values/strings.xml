@@ -61,5 +61,13 @@
     <string name="acceptsdk_progress__swipe">Swipe card…</string>
     <string name="acceptsdk_progress__remove">Pleases remove card…</string>
     <string name="acceptsdk_progress__customer_sign_request">Please sign here and confirm signature with CONFIRM button.</string>
+    <string name="acceptsdk_progress__wait">"Loading, please wait…"</string>
+    <string name="acceptsdk_progress__bad_readout">"Bad readout"</string>
+
+    <string name="toast_label_successful_payment">"Payment successful!"</string>
+    <string name="toast_label_no_transactions">"No transactions."</string>
+    <!--<string name="payment_title">"%s %s"</string>-->
+    <string name="dialog_trx_load_err">"Transactions Load Error"</string>
+    <string name="blank">" "</string>
 
 </resources>

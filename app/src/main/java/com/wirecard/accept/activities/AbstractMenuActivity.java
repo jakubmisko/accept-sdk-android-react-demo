@@ -1,6 +1,7 @@
 package com.wirecard.accept.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -20,12 +21,12 @@ public class AbstractMenuActivity extends Activity {
         setContentView(R.layout.activity_menu);
 //TODO activities
         findViewById(R.id.payment).setOnClickListener(l -> {
-
-            Toast.makeText(this, "payment flow click", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), PaymentFlowActivity.class));
+            //Toast.makeText(this, "payment flow click", Toast.LENGTH_SHORT).show();
         });
         findViewById(R.id.history).setOnClickListener(l -> {
-
-            Toast.makeText(this, "payment history click", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), TransactionsHistoryActivity.class));
+//            Toast.makeText(this, "payment history click", Toast.LENGTH_SHORT).show();
         });
         findViewById(R.id.logout).setOnClickListener(l -> {
             AcceptSDK.logout();

@@ -16,6 +16,6 @@ public class WrongAcceptSettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wrong);
-        ((TextView) findViewById(R.id.text)).setText(getIntent().getStringExtra(Constants.text));
+        ((TextView) findViewById(R.id.text)).setText(getIntent().getStringExtra(Constants.TEXT));
     }
 }
