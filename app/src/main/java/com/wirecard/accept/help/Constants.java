@@ -11,7 +11,9 @@ public interface Constants {
     String EXTRA_SELECTED_DEVICE = "selected_device";
 
     int INTENT_TYPE_LOGOUT = 1;
+    int REQUEST_FIRMWARE_UPDATE = 11;
 
     String RECEIPT = "receipt";
     String REVERSE_REFUND = "reverse/refund";
+
 }

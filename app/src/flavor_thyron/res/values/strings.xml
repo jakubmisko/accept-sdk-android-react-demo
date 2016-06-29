@@ -2,7 +2,7 @@
 <resources>
 
     <string name="manifest_app_name">Accept Sample App - Thyron</string>
-    <string name="wl_general_firmware_update_pending">Updating the firmware from %1$s to %2$s ...</string>
+    <string name="wl_general_firmware_update_pending">Updating the firmware from %1$s to %2$s …</string>
     <string name="wl_general_done">Done</string>
 
     <string name="progress_bluetooth_off">"bluetooth_is_currently_powered_off"</string>
@@ -14,7 +14,16 @@
     <string name="bt_pairing_failed">"Bluetooth pairing: connect failed"</string>
     <string name="bt_pairing_connection_lost">"Bluetooth pairing: connection lost"</string>
     <string name="bt_pairing_connecting">"Bluetooth pairing: connecting"</string>
-    <string name="processing">"Processing..."</string>
+    <string name="bt_enable">Check bluetooth settings and enable bluetooth</string>
+    <string name="bt_connection_error">Bluetooth connection error.</string>
+    <string name="pair_terminal">Settings: list of bounded devices empty, please pair terminal before.</string>
+    <string name="processing">Processing…</string>
+    <string name="something_wrong_try_again">Something went wrong try please again</string>
     <string name="installing_fw">Installing new firmware</string>
     <string name="fw_install_success">New firmware installed successfully</string>
+    <string name="fw_config_success_continue">Installed Configuration files check succesfull. Continue</string>
+    <string name="fw_config_success_now_reboot">New configuration files installed successfully. Your terminal will now reboot</string>
+    <string name="fw_install_no_response">Null response</string>
+    <string name="fw_install_wrong_data">Please check your settings, current version from backend have wrong data</string>
+    <string name="fw_update_not_needed">Firmware version on terminal not need to be updated</string>
 </resources>

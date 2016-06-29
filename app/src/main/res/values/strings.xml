@@ -70,4 +70,8 @@
     <string name="dialog_trx_load_err">"Transactions Load Error"</string>
     <string name="blank">" "</string>
 
+    <string name="reversed">Transaction was reversed</string>
+    <string name="refunded">Transaction was refunded</string>
+    <string name="reversed_or_refunded">Transaction was reversed or refunded</string>
+    <string name="not_reversed_refunded">Can not be reversed or refunded</string>
 </resources>

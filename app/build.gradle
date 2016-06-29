@@ -1,6 +1,6 @@
 apply plugin: 'me.tatarka.retrolambda' // must be before application
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -10,12 +10,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    compileSdkVersion 24
+    buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId "de.wirecard.accept.sample"
         minSdkVersion 11
-        targetSdkVersion 21
+        targetSdkVersion 24
         versionCode 5
         versionName "1.4"
     }
@@ -63,12 +63,14 @@ android {
         }
     }
 
-    android {
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
+    lintOptions {
+        disable 'InvalidPackage'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
@@ -77,19 +79,18 @@ dependencies {
     //    flavor_bbposCompile(name: 'accept-sdk-android-bbposextension-release', ext: 'aar')
     flavor_thyronCompile 'com.github.mposSVK:accept-android-extension-spire:1.5.3'
     flavor_bbposCompile 'com.github.mposSVK:accept-android-extension-bbpos:1.5.1'
-    //compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
-//    compile 'io.reactivex:rxjava-async-util:0.21.0'
-    //compile 'com.squareup.retrofit2:retrofit:2.0.1'
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
     compile 'org.apache.httpcomponents:httpmime:4.3.5'
     compile 'com.github.mposSVK:acceptSDK-Android:1.5.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava-async-util:0.21.0'
     compile 'com.jakewharton:butterknife:8.1.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:design:24.0.0'
     compile 'info.android15.nucleus:nucleus:2.0.6'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
 }

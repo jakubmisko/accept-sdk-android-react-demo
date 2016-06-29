@@ -1,10 +1,15 @@
-package com.wirecard.accept.activities.presenters;
+package com.wirecard.accept.presenters;
 
+import android.bluetooth.BluetoothAdapter;
 import android.util.Log;
+import android.widget.Button;
 
+import com.wirecard.accept.FirmwareUpdate;
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.FirmwareUpdateActivity;
+import com.wirecard.accept.async.DownloadFirmware;
 
+import butterknife.BindView;
 import de.wirecard.accept.sdk.AcceptSDK;
 import de.wirecard.accept.sdk.FirmwareNumberAndUrl;
 import de.wirecard.accept.sdk.cnp.CNPController;
@@ -26,17 +31,17 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jakub on 16.06.2016.
  */
-public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> implements CNPListener {
+public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> implements CNPListener, FirmwareUpdate {
     private static final String TAG = FirmwareUpdatePresenter.class.getSimpleName();
     private CNPDevice currentDev;
     private CNPController<?> controller = null; //old version of implementation
 
     private boolean terminalResetByApp = false;
-
-    FirmwareNumberAndUrl firmwareNumberAndUrl;
-    private Subscription downloadTask;
     private boolean restarted = false;
     private boolean finishedUpdate = false;
+    private FirmwareNumberAndUrl firmwareNumberAndUrl;
+    private DownloadFirmware downloadTask;
+    private Subscription handleFile;
 
     public FirmwareUpdatePresenter() {
         firmwareNumberAndUrl = AcceptSDK.getCurrentVersionOfSavedFirmwareInBackend();
@@ -47,43 +52,18 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
         this.currentDev = currentDev;
     }
 
-    public void cancelActualTask() {
-        if (downloadTask != null) {
-            downloadTask.unsubscribe();
-            downloadTask = null;
+    @Override
+    protected void onTakeView(FirmwareUpdateActivity firmwareUpdateActivity) {
+        super.onTakeView(firmwareUpdateActivity);
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            getView().showEnableBluetooth();
+        } else {
+            downloadTask = new DownloadFirmware(firmwareNumberAndUrl, getView().getApplicationContext());
+            downloadTask.execute();
         }
     }
 
-    public void downloadFirmwareExecution() {
-        if (!downloadTask.isUnsubscribed()) {
-            downloadTask.unsubscribe();
-            downloadTask = null;
-        }
-        getView().showFirmwareScreen_LoadingVersionInfo(); //pre execute
-        downloadTask = Single.create((singleSubscriber) -> {
-            try {
-                //do in background
-                TerminalInfo.downloadSaveAndExtractZipFile(getView().getApplicationContext(), firmwareNumberAndUrl.getFwUrl());
-                singleSubscriber.onSuccess(null);
-            } catch (Exception e) {
-                singleSubscriber.onError(e);
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .subscribe(new SingleSubscriber<Object>() {
-
-                    @Override
-                    public void onSuccess(Object value) {
-                        handleFirmwareFileReady();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, e.getMessage());
-                        getView().showFailedConnectingScreen();
-                        getView().setMessageText(R.string.failed_open_zip_config);
-                    }
-                });
-    }
 
     /*
      if files downloaded call controller.connectToDevice
@@ -91,21 +71,28 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
      but for now you can use it like best way to upload firmware
      */
     public void handleFirmwareFileReady() {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (!wasDestroyed()) {
-//                    controller.setCNPListener(FirmwareUpdateActivity.this);
-//                    controller.connectToDevice(currentDev, true, true, -1);
-//                }
-//            }
-//        });
-        Observable.create(subscriber -> {
+        handleFile = Observable.create(subscriber -> {
             if (!getView().wasDestroyed()) {
                 controller.setCNPListener(this);
                 controller.connectToDevice(currentDev, true, true, -1);
             }
         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+    }
+
+    public void showFirmwareScreen_LoadingVersionInfo() {
+        getView().showFirmwareScreen_LoadingVersionInfo();
+    }
+
+    @Override
+    protected void onDropView() {
+        super.onDropView();
+        if (downloadTask != null) {
+            downloadTask.cancel();
+        }
+        if (handleFile != null && handleFile.isUnsubscribed()) {
+            handleFile.unsubscribe();
+            handleFile = null;
+        }
     }
 
     @Override
@@ -228,10 +215,8 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
         Log.d(TAG, "unregister from cnp controller");
         if (controller == null) return;
         controller.setCNPListener(null);
-        if (!downloadTask.isUnsubscribed()) {
-            downloadTask.unsubscribe();
-            downloadTask = null;
-        }
+        if(downloadTask != null)
+        downloadTask.cancel();
     }
 
     //not used
@@ -250,4 +235,3 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
 
     }
 }
-

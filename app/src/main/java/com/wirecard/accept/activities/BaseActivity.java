@@ -11,10 +11,13 @@ import android.util.Log;
 
 import com.wirecard.accept.help.Constants;
 
+import nucleus.presenter.Presenter;
+import nucleus.view.NucleusActivity;
+
 /**
  * Created by jakub.misko on 14. 4. 2016.
  */
-public abstract class BaseActivity extends Activity{
+public abstract class BaseActivity<P extends Presenter> extends NucleusActivity<P>{
     final String TAG = BaseActivity.class.getSimpleName();
 
 
