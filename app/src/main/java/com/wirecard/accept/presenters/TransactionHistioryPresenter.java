@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -118,7 +119,8 @@ public class TransactionHistioryPresenter extends Presenter<TransactionsHistoryA
     @Override
     protected void onDropView() {
         super.onDropView();
-        task.cancel();
+        if (task != null)
+            task.cancel();
     }
 
     /**
@@ -231,13 +233,14 @@ public class TransactionHistioryPresenter extends Presenter<TransactionsHistoryA
     public class PaymentAdapter extends ArrayAdapter<Payment> {
         private Context context;
 
-        public PaymentAdapter(Context context) {
+        PaymentAdapter(Context context) {
             super(context, R.layout.row_payment_history);
             this.context = context;
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = ((Activity) context).getLayoutInflater().inflate(R.layout.row_payment_history, parent, false);

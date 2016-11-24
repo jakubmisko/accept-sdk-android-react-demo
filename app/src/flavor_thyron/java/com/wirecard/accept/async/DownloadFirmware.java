@@ -1,22 +1,16 @@
 package com.wirecard.accept.async;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.wirecard.accept.FirmwareUpdate;
-import com.wirecard.accept.R;
 
 import java.io.IOException;
 
 import de.wirecard.accept.sdk.FirmwareNumberAndUrl;
 import de.wirecard.accept.sdk.model.TerminalInfo;
-import rx.Single;
-import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import rx.util.async.Async;
 
 /**
@@ -49,9 +43,7 @@ public class DownloadFirmware {
     }
 
     public Action1<Boolean> onSuccess(){
-        return response ->{
-            update.handleFirmwareFileReady();
-        };
+        return response -> update.handleFirmwareFileReady();
     }
     public void cancel() {
         if (task != null && task.isUnsubscribed()) {

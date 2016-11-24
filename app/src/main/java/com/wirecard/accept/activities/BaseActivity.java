@@ -1,6 +1,5 @@
 package com.wirecard.accept.activities;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +18,6 @@ import nucleus.view.NucleusActivity;
  */
 public abstract class BaseActivity<P extends Presenter> extends NucleusActivity<P>{
     final String TAG = BaseActivity.class.getSimpleName();
-
-
     public final static int TYPE_LOGOUT = 1;
 
     @Override

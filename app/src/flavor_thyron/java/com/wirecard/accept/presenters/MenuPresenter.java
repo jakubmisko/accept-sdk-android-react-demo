@@ -21,20 +21,13 @@ import butterknife.BindView;
 import de.wirecard.accept.extension.refactor.AcceptThyronPaymentFlowController;
 import de.wirecard.accept.extension.thyron.ThyronDevice;
 import de.wirecard.accept.sdk.AcceptSDK;
-import de.wirecard.accept.sdk.FirmwareNumberAndUrl;
-import de.wirecard.accept.sdk.backend.AcceptBackendService;
-import de.wirecard.accept.sdk.backend.AcceptFirmwareVersion;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
-import de.wirecard.accept.sdk.model.TerminalInfo;
 import nucleus.presenter.Presenter;
-import rx.Single;
-import rx.SingleSubscriber;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by jakub on 24.06.2016.
  */
-public class MenuPresenter extends Presenter<MenuActivity> implements FirmwareActivityStart{
+public class MenuPresenter extends Presenter<MenuActivity> implements FirmwareActivityStart {
     @BindView(R.id.firmwareUpdate)
     Button firmwareUpdateButton;
     private Context context;
@@ -47,13 +40,14 @@ public class MenuPresenter extends Presenter<MenuActivity> implements FirmwareAc
                 , Constants.REQUEST_FIRMWARE_UPDATE);
     }
 
-    public void firmwareUpdate(){
+    public void firmwareUpdate() {
         AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);//clear remembered data
         //SDK is remembering versions per login
         showSpireBoundedDevicesChooserDialog();
     }
+
     private void showSpireBoundedDevicesChooserDialog() {
-        if(getView() != null){
+        if (getView() != null) {
             context = getView().getApplicationContext();
         }
         final AcceptThyronPaymentFlowController controller = new AcceptThyronPaymentFlowController(false, true);
@@ -85,7 +79,7 @@ public class MenuPresenter extends Presenter<MenuActivity> implements FirmwareAc
                         new PaymentFlowDialogs.TerminalChooserListener<PaymentFlowController.Device>() {
                             @Override
                             public void onDeviceSelected(PaymentFlowController.Device selectedDevice) {
-                                 device = selectedDevice;
+                                device = selectedDevice;
 
                                 //this method is added only for support compatibility beween this (reviewed)SDK and new SDK 2.0
                                 //method start communication to get some basic terminal information (which we can compare with data from server)
@@ -136,13 +130,14 @@ public class MenuPresenter extends Presenter<MenuActivity> implements FirmwareAc
     }
 
     private void runFirmwareCheckTask(PaymentFlowController.Device device) {
-        fwCheck = new FirmwareCheck(this);
+        fwCheck = new FirmwareCheck(this, context);
         fwCheck.execute(device);
     }
 
     @Override
     protected void onDropView() {
         super.onDropView();
-        fwCheck.cancel();
+        if (fwCheck != null)
+            fwCheck.cancel();
     }
 }

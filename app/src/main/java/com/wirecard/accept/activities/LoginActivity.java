@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
             finish();
             return;
         }
-        findViewById(R.id.action).setOnClickListener(l -> {
+        findViewById(R.id.login).setOnClickListener(l -> {
             handleOnLoginPressed();
         });
 
@@ -73,7 +73,7 @@ public class LoginActivity extends Activity {
     }
 
     private void enableForm(final boolean flag) {
-        findViewById(R.id.action).setEnabled(flag);
+        findViewById(R.id.login).setEnabled(flag);
         findViewById(R.id.username).setEnabled(flag);
         findViewById(R.id.password).setEnabled(flag);
     }

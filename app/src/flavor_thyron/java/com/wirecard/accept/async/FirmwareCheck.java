@@ -28,8 +28,9 @@ public class FirmwareCheck {
     private FirmwareActivityStart starter;
     private Subscription task;
 
-    public FirmwareCheck(FirmwareActivityStart starter) {
+    public FirmwareCheck(FirmwareActivityStart starter, Context context) {
         this.starter = starter;
+        this.context = context;
     }
 
     public void beforeExecute() {
@@ -78,7 +79,7 @@ public class FirmwareCheck {
     }
 
     public void cancel() {
-        if (task != null && task.isUnsubscribed()) {
+        if (task != null && !task.isUnsubscribed()) {
             task.unsubscribe();
             task = null;
         }

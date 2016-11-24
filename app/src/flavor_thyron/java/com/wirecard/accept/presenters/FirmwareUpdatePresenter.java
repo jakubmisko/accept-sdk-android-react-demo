@@ -2,14 +2,12 @@ package com.wirecard.accept.presenters;
 
 import android.bluetooth.BluetoothAdapter;
 import android.util.Log;
-import android.widget.Button;
 
 import com.wirecard.accept.FirmwareUpdate;
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.FirmwareUpdateActivity;
 import com.wirecard.accept.async.DownloadFirmware;
 
-import butterknife.BindView;
 import de.wirecard.accept.sdk.AcceptSDK;
 import de.wirecard.accept.sdk.FirmwareNumberAndUrl;
 import de.wirecard.accept.sdk.cnp.CNPController;
@@ -19,14 +17,10 @@ import de.wirecard.accept.sdk.cnp.observer.CNPListener;
 import de.wirecard.accept.sdk.cnp.observer.ProcessResult;
 import de.wirecard.accept.sdk.cnp.observer.ProcessState;
 import de.wirecard.accept.sdk.cnp.observer.TerminalEvent;
-import de.wirecard.accept.sdk.model.TerminalInfo;
 import nucleus.presenter.Presenter;
 import rx.Observable;
-import rx.Single;
-import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by jakub on 16.06.2016.
@@ -86,9 +80,7 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
     @Override
     protected void onDropView() {
         super.onDropView();
-        if (downloadTask != null) {
-            downloadTask.cancel();
-        }
+        cancelActualTask();
         if (handleFile != null && handleFile.isUnsubscribed()) {
             handleFile.unsubscribe();
             handleFile = null;
@@ -219,6 +211,11 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
         downloadTask.cancel();
     }
 
+    public void cancelActualTask() {
+        if (downloadTask != null) {
+            downloadTask.cancel();
+        }
+    }
     //not used
     @Override
     public void onProcessStarted() {
@@ -234,4 +231,6 @@ public class FirmwareUpdatePresenter extends Presenter<FirmwareUpdateActivity> i
     public void onProcessFinished(ProcessResult processResult, Exception e) {
 
     }
+
+
 }
