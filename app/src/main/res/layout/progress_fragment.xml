@@ -11,9 +11,14 @@
         android:layout_gravity="center"/>
 
     <TextView
-        android:id="@+id/amount"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:layout_above="@+id/buttons_section"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/amount"
+        android:layout_alignStart="@+id/amount"
+        android:layout_marginBottom="145dp"/>
 </FrameLayout>

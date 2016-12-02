@@ -98,9 +98,10 @@ public class RxDialog {
                     .setCancelable(false)
                     .setSingleChoiceItems(items, -1, (dialogInterface, i) -> {
                         subscriber.onNext(i);
-                        subscriber.onCompleted();
+//                        subscriber.onCompleted();
                     })
                     .setNegativeButton(negativeBtn, (dialogInterface, i) -> {
+//                        subscriber.onNext(-1);
                         subscriber.onCompleted();
                     })
                     .create();
@@ -109,5 +110,21 @@ public class RxDialog {
             ad.show();
         });
     }
-
+    @NonNull
+    public static Observable<Void> create(Context context, int title, int message, int possitiveBtn){
+        return Observable.create((Subscriber<? super Void> subscriber) -> {
+            final AlertDialog ad = new AlertDialog.Builder(context)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setCancelable(false)
+                    .setPositiveButton(possitiveBtn, (dialogInterface, i) -> {
+                        subscriber.onNext(null);
+                        subscriber.onCompleted();
+                    })
+                    .create();
+            // cleaning up
+            subscriber.add(Subscriptions.create(ad::dismiss));
+            ad.show();
+        });
+    }
 }

@@ -12,6 +12,7 @@ import com.wirecard.accept.activities.PaymentFlowSignatureView;
 import com.wirecard.accept.rx.dialog.RxDialog;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Subscription;
 
 /**
@@ -27,9 +28,18 @@ public class SignatureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.signature_fragment, container, false);
+        View view = inflater.inflate(R.layout.signature_fragment, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
+    public void showSignatureSection(Bundle bundle){
+        signatureView.showSignature(bundle);
+    }
+
+    public void showSignatureRequest(){
+
+    }
     public void showSignatureConfirmRequest(){
 //        if (signatureConfirmationDialog != null) {
 //            return;
@@ -50,6 +60,6 @@ public class SignatureFragment extends Fragment {
 //                }
 //            });
 //        });
-        RxDialog.
+//        RxDialog.
     }
 }
