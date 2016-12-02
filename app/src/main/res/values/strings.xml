@@ -3,10 +3,13 @@
 
     <string name="manifest_app_name">Accept Sample App - Thyron</string>
 
+    <string name="login_error">Login error</string>
+
     <string name="acceptsdk_payment_activity_cancel_signature_confirmation_button">Cancel</string>
     <string name="acceptsdk_payment_activity_cancel_button">Cancel</string>
     <string name="acceptsdk_payment_activity_retry_button">Retry</string>
     <string name="acceptsdk_payment_activity_confirm_signature_button">Confirm</string>
+    <string name="payment_sign_in_label">Sign In</string>
 
     <string name="acceptsdk_dialog_payment_error_title">Transaction error</string>
     <string name="acceptsdk_dialog_payment_error_message">Transaction rejected ( %s ).</string>
@@ -74,4 +77,6 @@
     <string name="refunded">Transaction was refunded</string>
     <string name="reversed_or_refunded">Transaction was reversed or refunded</string>
     <string name="not_reversed_refunded">Can not be reversed or refunded</string>
+    <string name="payment_cancel_button">Cancel</string>
+    <string name="payment_confirm_button">Confirm</string>
 </resources>

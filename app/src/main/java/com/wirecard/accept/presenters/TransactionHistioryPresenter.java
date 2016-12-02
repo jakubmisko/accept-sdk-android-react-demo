@@ -60,7 +60,7 @@ public class TransactionHistioryPresenter extends Presenter<TransactionsHistoryA
         PaymentAdapter pa = new PaymentAdapter(context);
         listView.setAdapter(pa);
         getPayments(context, trxHistoryView, listView, loading);
-        //TODO butterknife?
+        //TODO put to view
         listView.setOnItemClickListener((parent, view, position, id) -> {
             final Payment payment = (Payment) listView.getAdapter().getItem(position);
             AlertDialog.Builder builder = new AlertDialog.Builder(context);

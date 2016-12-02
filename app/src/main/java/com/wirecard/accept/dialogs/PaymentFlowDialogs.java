@@ -39,7 +39,8 @@ public class PaymentFlowDialogs {
         void onSignatureConfirmedIsNotOK();
     }
 
-    public static void showTerminalDiscoveryError(final Context context, final PaymentFlowController.DiscoveryError discoveryError, final String technicalMessage, final View.OnClickListener confirmedClickListener) {
+    public static void showTerminalDiscoveryError(final Context context, final PaymentFlowController.DiscoveryError discoveryError,
+                                                  final String technicalMessage, final View.OnClickListener confirmedClickListener) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.acceptsdk_dialog_discovery_error_title)
                 .setMessage(context.getString(R.string.acceptsdk_dialog_discovery_error_message, discoveryError + " - " + technicalMessage))
@@ -129,7 +130,8 @@ public class PaymentFlowDialogs {
                 }).create().show();
     }
 
-    public static void showPaymentFlowError(Context context, PaymentFlowController.Error paymentFlowError, final String technicalMessage, final View.OnClickListener confirmClickListener) {
+    public static void showPaymentFlowError(Context context, PaymentFlowController.Error paymentFlowError,
+                                            final String technicalMessage, final View.OnClickListener confirmClickListener) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.acceptsdk_dialog_payment_error_title)
                 .setCancelable(false /* important */)

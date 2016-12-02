@@ -1,13 +1,12 @@
 package com.wirecard.accept.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
-
 import com.wirecard.accept.R;
+import com.wirecard.accept.paymentflow.PaymentFlowActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

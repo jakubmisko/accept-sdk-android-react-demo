@@ -13,7 +13,7 @@
         android:label="@string/manifest_app_name"
         android:supportsRtl="true">
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.login.LoginActivity"
             android:configChanges="screenSize|screenLayout"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -22,14 +22,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MenuActivity"
+            android:name=".menu.MenuActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.WrongAcceptSettingsActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.PaymentFlowActivity"
+        <activity android:name=".paymentflow.PaymentFlowActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait"/>
         <activity

@@ -5,9 +5,9 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.wirecard.accept.activities.LoginActivity;
+import com.wirecard.accept.activities.login.LoginActivity;
 import com.wirecard.accept.help.Constants;
-import com.wirecard.accept.receivers.RxBroadcastReceiver;
+import com.wirecard.accept.rx.receivers.RxBroadcastReceiver;
 
 import de.wirecard.accept.sdk.AcceptSDK;
 import de.wirecard.accept.sdk.AcceptSDKIntents;
