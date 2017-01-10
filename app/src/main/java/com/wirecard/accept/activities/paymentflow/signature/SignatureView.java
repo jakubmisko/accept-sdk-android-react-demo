@@ -4,7 +4,7 @@
  *  Accept SDK for Android
  *
  */
-package com.wirecard.accept.activities;
+package com.wirecard.accept.activities.paymentflow.signature;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PaymentFlowSignatureView extends View {
+public class SignatureView extends View {
 
     private Paint signaturePaint;
     private Bitmap signatureBitmap;
@@ -29,23 +29,26 @@ public class PaymentFlowSignatureView extends View {
     private SVPath signaturePath;
     private Paint signatureBitmapPaint;
 
-    private ArrayList<SVPath> paths = new ArrayList<SVPath>();
+    private ArrayList<SVPath> paths;
 
     private boolean wasTouched = false;
 
-    public PaymentFlowSignatureView(Context context) {
+    public SignatureView(Context context) {
         super(context);
         initPainting();
+        paths = new ArrayList<>();
     }
 
-    public PaymentFlowSignatureView(Context context, AttributeSet attrs) {
+    public SignatureView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPainting();
+        paths = new ArrayList<SVPath>();
     }
 
-    public PaymentFlowSignatureView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SignatureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initPainting();
+        paths = new ArrayList<SVPath>();
     }
 
     private void initPainting() {
@@ -91,8 +94,7 @@ public class PaymentFlowSignatureView extends View {
         final Bitmap scaledBitmap = Bitmap.createScaledBitmap(signatureBitmap, signatureBitmap.getWidth()/2, signatureBitmap.getHeight()/2, true);
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         scaledBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        final byte[] result =  outputStream.toByteArray();
-        return result;
+        return outputStream.toByteArray();
     }
 
     @Override
@@ -152,7 +154,7 @@ public class PaymentFlowSignatureView extends View {
 
     public void serialize(Bundle bundle) {
         if(bundle == null) return;
-        ArrayList<SVPath> temp = new ArrayList<PaymentFlowSignatureView.SVPath>();
+        ArrayList<SVPath> temp = new ArrayList<>();
         temp.addAll(paths);
         temp.remove(signaturePath);
 
