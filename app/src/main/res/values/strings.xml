@@ -4,6 +4,9 @@
     <string name="manifest_app_name">Accept Sample App - Thyron</string>
 
     <string name="login_error">Login error</string>
+    <string name="login_empty_name">User name field is empty.</string>
+    <string name="login_empty_pass">Password field is empty.</string>
+    <string name="login_empty_pass_and_name">User name and password fields are empty.</string>
 
     <string name="acceptsdk_payment_activity_cancel_signature_confirmation_button">Cancel</string>
     <string name="acceptsdk_payment_activity_cancel_button">Cancel</string>
@@ -29,7 +32,7 @@
     <string name="acceptsdk_dialog_terminal_chooser_cancel">Cancel</string>
 
     <string name="acceptsdk_dialog_no_terminals_title">No terminals</string>
-    <string name="acceptsdk_dialog_no_terminals_message">Please pair Posmate terminal with your device and try again later.</string>
+    <string name="acceptsdk_dialog_no_terminals_message">Please pair terminal with your device and try again.</string>
     <string name="acceptsdk_dialog_no_terminals_confirm">OK</string>
 
     <string name="acceptsdk_dialog_cancel_signature_request_title">Signature</string>
@@ -66,6 +69,11 @@
     <string name="acceptsdk_progress__customer_sign_request">Please sign here and confirm signature with CONFIRM button.</string>
     <string name="acceptsdk_progress__wait">"Loading, please wait…"</string>
     <string name="acceptsdk_progress__bad_readout">"Bad readout"</string>
+    <string name="acceptsdk_progress__loading_pls_wait">Loading, please wait…</string>
+    <string name="acceptsdk_progress__insert_swipe_or_tap">Insert, swipe or present card…</string>
+    <string name="acceptsdk_progress__confirm_signature">Confirm signature…</string>
+    <string name="acceptsdk_progress__terminating">Terminating…</string>
+    <string name="acceotsdk_progress__unknown">Uknown</string>
 
     <string name="toast_label_successful_payment">"Payment successful!"</string>
     <string name="toast_label_no_transactions">"No transactions."</string>
@@ -79,4 +87,13 @@
     <string name="not_reversed_refunded">Can not be reversed or refunded</string>
     <string name="payment_cancel_button">Cancel</string>
     <string name="payment_confirm_button">Confirm</string>
+    <string name="menu_device_identity_error">Check device identity error code : %s</string>
+    <string name="menu_bt_error">Bluetooth connection error.</string>
+    <string name="menu_fw_version_check">Started firmware version check</string>
+    <string name="menu_fw_check_wrong_be_data">Please check your settings, current version from backend have wrong data</string>
+    <string name="menu_fw_check_update_not_needed">Firmware version update is not needed</string>
+    <string name="fw_update_progress_contacting">CONTACTING</string>
+    <string name="fw_update_message_bt_connecting">Bluetooth pairing: connecting</string>
+    <string name="fw_update_failed_download_and_extract">Failed to open the zipped configuration file</string>
+
 </resources>
