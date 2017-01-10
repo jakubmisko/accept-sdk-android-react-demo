@@ -1,6 +1,4 @@
-package com.wirecard.accept.paymentflow;
-
-import com.wirecard.accept.activities.paymentflow.AbstractPaymentFlowActivity;
+package com.wirecard.accept.activities.paymentflow;
 
 import de.wirecard.accept.extension.refactor.AcceptThyronPaymentFlowController;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
