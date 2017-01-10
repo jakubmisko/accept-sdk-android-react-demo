@@ -1,20 +1,25 @@
 package com.wirecard.accept.activities.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.wirecard.accept.Application;
 import com.wirecard.accept.BuildConfig;
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.BaseActivity;
+import com.wirecard.accept.activities.menu.MenuActivity;
+import com.wirecard.accept.help.Constants;
+import com.wirecard.accept.help.RxHelper;
 import com.wirecard.accept.rx.dialog.RxDialog;
-import com.wirecard.accept.rx.view.RxView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
 
@@ -23,6 +28,7 @@ import rx.Subscription;
  */
 @RequiresPresenter(LoginPresenter.class)
 public class LoginActivity extends BaseActivity<LoginPresenter> {
+    private final String TAG = getClass().getSimpleName();
     @BindView(R.id.username)
     EditText username;
     @BindView(R.id.password)
@@ -34,7 +40,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
     @BindView(R.id.version)
     TextView version;
 
-    private Subscription btnClick, alertDialog;
+    private Subscription alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +48,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
-        btnClick = RxView.clicks(loginBtn).subscribe(click -> getPresenter().evaluateLogin(),
-                error -> Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
 
         backend.setText(BuildConfig.apiPath);
+        //TODO resource
         String versionStr = String.format("Version: %s(%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
         version.setText(versionStr);
     }
@@ -53,44 +58,35 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
     @Override
     protected void onResume() {
         super.onResume();
-        getPresenter().checkBackendConfig();
-        getPresenter().checkLoginToken();
+        checkBackendConfig();
+        checkLoginToken();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (btnClick != null) {
-            btnClick.unsubscribe();
-            btnClick = null;
+        RxHelper.unsubscribe(alertDialog);
+    }
+
+    @OnClick(R.id.login)
+    public void handleLogin() {
+        if (TextUtils.isEmpty(username.getText()) && TextUtils.isEmpty(password.getText())) {
+            presentFormError(getString(R.string.login_empty_pass_and_name));
+        } else if (TextUtils.isEmpty(username.getText())) {
+            presentFormError(getString(R.string.login_empty_name));
+        } else if (TextUtils.isEmpty(password.getText())) {
+            presentFormError(getString(R.string.login_empty_pass));
+        } else {
+            enableForm(false);
+            getPresenter().evaluateLogin(username.getText().toString(), password.getText().toString());
         }
-        if (alertDialog != null) {
-            alertDialog.unsubscribe();
-            alertDialog = null;
-        }
     }
 
-    public boolean isNameEmpty() {
-        return TextUtils.isEmpty(username.getText());
+    public void goToMenu() {
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
     }
 
-    public boolean isPassEmpty() {
-        return TextUtils.isEmpty(password.getText());
-    }
-
-    public String getUsername() {
-        return username.getText().toString();
-    }
-
-    public String getPass() {
-        return password.getText().toString();
-    }
-//    @OnClick(R.id.login)
-//    void handleOnLoginPressed() {
-//        final String usernameText = username.getText().toString();
-//        final String passwordText = password.getText().toString();
-//
-//    }
 
     public void enableForm(final boolean flag) {
         loginBtn.setEnabled(flag);
@@ -99,12 +95,32 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
     }
 
     public void presentFormError(final String error) {
-//        new AlertDialog.Builder(this)
-//                .setTitle("Login Error")
-//                .setMessage(error)
-//                .setPositiveButton("OK", null)
-//                .create()
-//                .show();
-        alertDialog = RxDialog.create(this, "Login Error", error).subscribe();
+        alertDialog = RxDialog.create(this, getString(R.string.login_error), error)
+                .doOnEach(notification -> enableForm(true))
+                .subscribe(click -> {
+                    Log.d(TAG, "presentFormError: dialog button clicked");
+                }, err -> {
+                    Log.e(TAG, "presentFormError: ", err);
+                });
+    }
+
+    private void checkBackendConfig() {
+        String wrongSdkConfig = ((Application) getApplication()).getErrorMessage();
+        if (!getPresenter().isBEConfigOk(wrongSdkConfig)) {
+            Intent intent = new Intent(this, WrongAcceptSettingsActivity.class);
+            intent.putExtra(Constants.TEXT, wrongSdkConfig);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    /**
+     * if user left application and return back in
+     */
+    void checkLoginToken() {
+        if (!getPresenter().isLoginTokenExpired()) {
+            startActivity(new Intent(this, MenuActivity.class));
+            finish();
+        }
     }
 }

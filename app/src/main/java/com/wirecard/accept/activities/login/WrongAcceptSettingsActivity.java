@@ -1,4 +1,4 @@
-package com.wirecard.accept.activities;
+package com.wirecard.accept.activities.login;
 
 import android.app.Activity;
 import android.os.Bundle;

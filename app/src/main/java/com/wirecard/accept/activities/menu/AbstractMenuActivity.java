@@ -1,29 +1,24 @@
-package com.wirecard.accept.activities;
+package com.wirecard.accept.activities.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.paymentflow.PaymentFlowActivity;
+import com.wirecard.accept.activities.BaseActivity;
+import com.wirecard.accept.activities.history.TransactionsHistoryActivity;
+import com.wirecard.accept.activities.login.LoginActivity;
+import com.wirecard.accept.activities.paymentflow.PaymentFlowActivity;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.wirecard.accept.sdk.AcceptSDK;
-import nucleus.presenter.Presenter;
+import nucleus.presenter.RxPresenter;
 
 /**
  * Created by jakub on 02.04.2016.
  */
-public abstract class AbstractMenuActivity<P extends Presenter> extends BaseActivity<P> {
-    @BindView(R.id.payment)
-    Button payment;
-    @BindView(R.id.history)
-    Button history;
-    @BindView(R.id.logout)
-    Button logout;
+public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseActivity<P> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +38,8 @@ public abstract class AbstractMenuActivity<P extends Presenter> extends BaseActi
     @OnClick(R.id.logout)
     public void logOut(){
         AcceptSDK.logout();
-        Toast.makeText(this, "Log out", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Bye", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }
