@@ -82,8 +82,8 @@ public class RxDialog {
         });
     }
     @NonNull
-    public static Observable<Boolean> create(Context context, String title, String message) {
-        return create(context, title, message, android.R.string.ok, android.R.string.cancel);
+    public static Observable<Void> create(Context context, String title, String message) {
+        return create(context, title, message, context.getString(android.R.string.ok));
     }
     @NonNull
     public static Observable<Boolean> create(Context context, int title, int message){
@@ -102,6 +102,7 @@ public class RxDialog {
                     })
                     .setNegativeButton(negativeBtn, (dialogInterface, i) -> {
 //                        subscriber.onNext(-1);
+                        subscriber.onError(new Throwable());
                         subscriber.onCompleted();
                     })
                     .create();
@@ -110,8 +111,9 @@ public class RxDialog {
             ad.show();
         });
     }
+
     @NonNull
-    public static Observable<Void> create(Context context, int title, int message, int possitiveBtn){
+    public static Observable<Void> create(Context context, String title, String message, String possitiveBtn){
         return Observable.create((Subscriber<? super Void> subscriber) -> {
             final AlertDialog ad = new AlertDialog.Builder(context)
                     .setTitle(title)
@@ -126,5 +128,14 @@ public class RxDialog {
             subscriber.add(Subscriptions.create(ad::dismiss));
             ad.show();
         });
+    }
+
+    @NonNull
+    public static Observable<Void> create(Context context, int title, int message, int possitiveBtn){
+        String titleString = context.getString(title);
+        String messageString = context.getString(message);
+        String possitiveBtnString = context.getString(possitiveBtn);
+
+        return create(context, titleString, messageString, possitiveBtnString);
     }
 }

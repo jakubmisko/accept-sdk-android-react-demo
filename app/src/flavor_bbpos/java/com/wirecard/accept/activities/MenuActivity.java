@@ -1,5 +1,7 @@
 package com.wirecard.accept.activities;
 
+import com.wirecard.accept.activities.menu.AbstractMenuActivity;
+
 /**
  * Created by jakub on 02.04.2016.
  */

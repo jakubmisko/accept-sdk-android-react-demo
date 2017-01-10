@@ -1,5 +1,7 @@
 package com.wirecard.accept.activities;
 
+import com.wirecard.accept.activities.paymentflow.AbstractPaymentFlowActivity;
+
 import de.wirecard.accept.extension.AcceptBbposPaymentFlowController;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 
@@ -8,12 +10,12 @@ import de.wirecard.accept.sdk.extensions.PaymentFlowController;
  */
 public class PaymentFlowActivity extends AbstractPaymentFlowActivity {
     @Override
-    PaymentFlowController createNewController() {
+    public PaymentFlowController createNewController() {
         return new AcceptBbposPaymentFlowController();
     }
 
     @Override
-    boolean isSignatureConfirmationInApplication() {
+    public boolean isSignatureConfirmationInApplication() {
         return true;
     }
 }

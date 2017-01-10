@@ -20,6 +20,10 @@ import rx.android.schedulers.AndroidSchedulers;
 public class Application extends android.app.Application {
     private String errorMessage = "";
     private Subscription receiver = null;
+    // used for switch using usb or bt
+    private Boolean usb = false;
+    // used for switch using usb or bt
+    private Boolean contactless = false;
 
     @Override
     public void onCreate() {
@@ -43,9 +47,10 @@ public class Application extends android.app.Application {
                     }
             );
         }
+        //todo apply ui scheduler by composition
         receiver = RxBroadcastReceiver.create(this, new IntentFilter(AcceptSDKIntents.SESSION_TERMINATED))
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext -> {
+                .subscribe(intent -> {
                     //Broadcast receiver onReceive:
                     Log.e("Session Timeout", "sending Log Out");
                     sendLogoutIntentAndGoLogin();
@@ -75,5 +80,13 @@ public class Application extends android.app.Application {
             receiver = null;
         }
         super.onTerminate();
+    }
+
+    public Boolean isUsb() {
+        return usb;
+    }
+
+    public Boolean isContactless() {
+        return contactless;
     }
 }
