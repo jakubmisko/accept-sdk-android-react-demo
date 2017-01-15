@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.BaseActivity;
+import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.help.Constants;
 
 import java.util.List;

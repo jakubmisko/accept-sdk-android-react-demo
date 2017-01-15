@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.BaseActivity;
+import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.history.TransactionsHistoryActivity;
 import com.wirecard.accept.activities.login.LoginActivity;
 import com.wirecard.accept.activities.paymentflow.PaymentFlowActivity;

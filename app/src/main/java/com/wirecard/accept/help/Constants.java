@@ -24,5 +24,7 @@ public interface Constants {
     int REQUEST_SIGNATURE = 99;
     String INITIAL_MESSAGE = "initial";
     String SHOW_PROGRESSBAR = "progress";
+    String PAYMENT_FRAGMENT_TAG = "pay_frag";
+    String SINGATURE_FRAGMENT_TAG = "sign_frag";
 
 }

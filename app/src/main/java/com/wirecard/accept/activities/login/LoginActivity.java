@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.wirecard.accept.Application;
 import com.wirecard.accept.BuildConfig;
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.BaseActivity;
+import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.menu.MenuActivity;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.RxHelper;

@@ -1,4 +1,4 @@
-package com.wirecard.accept.activities;
+package com.wirecard.accept.activities.base;
 
 import android.content.IntentFilter;
 import android.os.Bundle;

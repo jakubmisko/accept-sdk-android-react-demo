@@ -35,4 +35,8 @@ public class ConfirmRequestWrapper {
             signatureConfirmationRequest.signatureConfirmed();
         }
     }
+
+    public boolean requireSignature(){
+        return signatureRequest != null;
+    }
 }

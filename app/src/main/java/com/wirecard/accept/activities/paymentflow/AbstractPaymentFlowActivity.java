@@ -5,21 +5,18 @@
  */
 package com.wirecard.accept.activities.paymentflow;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.BaseActivity;
-import com.wirecard.accept.activities.paymentflow.payment.PaymentContract;
+import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.paymentflow.payment.PaymentFragment;
 import com.wirecard.accept.activities.paymentflow.signature.ConfirmRequestWrapper;
-import com.wirecard.accept.activities.paymentflow.signature.SignatureContract;
 import com.wirecard.accept.activities.paymentflow.signature.SignatureFragment;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.RxHelper;
@@ -33,7 +30,8 @@ import rx.Subscription;
 /**
  * Basin payment flow controlling activity
  */
-public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFlowPresenter> implements PaymentContract, SignatureContract, PaymentFlowController.PaymentFlowDelegate {
+//TODO find place when signature fragment should be replaced with payment frag
+public abstract class AbstractPaymentFlowActivity extends BaseActivity implements PaymentFlowController.PaymentFlowDelegate {
 
     private Subscription receiver;
 
@@ -41,48 +39,45 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
 
     protected Boolean sepa = false;// used for sepa payment support
     Bundle sign = null;
+    private PaymentFragment paymentFragment;
+    private SignatureFragment signatureFragment;
 
     @BindView(R.id.container)
     View content;
+    private String TAG = getClass().getSimpleName();
 
 
     public PaymentFlowController getPaymentFlowController() {
         return paymentFlowController;
     }
 
-    private void toFragment(Fragment fragment) {
-        FragmentManager fm = getFragmentManager();
-        Fragment current = fm.findFragmentById(R.id.container);
-        if (current == null || !current.equals(fragment)) {
-            FragmentTransaction transaction = fm.beginTransaction();
-            transaction.replace(R.id.container, fragment);
-            transaction.commit();
+    public void showPaymentFragment() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (paymentFragment != null && paymentFragment.isAdded()) {
+            transaction.show(paymentFragment);
+        } else {
+            paymentFragment = PaymentFragment.newInstance();
+            transaction.add(R.id.container, paymentFragment, Constants.PAYMENT_FRAGMENT_TAG);
         }
+        if (signatureFragment != null && signatureFragment.isAdded()) {
+            transaction.hide(signatureFragment);
+        }
+        transaction.commit();
     }
 
-    public PaymentFragment toPaymentFragment() {
-        FragmentManager fm = getFragmentManager();
-        Fragment current = fm.findFragmentById(R.id.container);
-        if (current instanceof PaymentFragment) {
-            return (PaymentFragment) current;
+    public void showSignatureFragment(ConfirmRequestWrapper wrapper) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (signatureFragment != null && signatureFragment.isAdded()) {
+            transaction.show(signatureFragment);
+            signatureFragment.setSignatureRequest(wrapper);
         } else {
-            PaymentFragment paymentFragment = PaymentFragment.newInstance();
-            toFragment(paymentFragment);
-            //TODO need synchronization here because commit is too slow
-            return paymentFragment;
+            signatureFragment = SignatureFragment.newInstance(wrapper);
+            transaction.add(R.id.container, signatureFragment, Constants.SINGATURE_FRAGMENT_TAG);
         }
-    }
-
-    public SignatureFragment toSignatureFragment(ConfirmRequestWrapper confirmRequestWrapper) {
-        FragmentManager fm = getFragmentManager();
-        Fragment current = fm.findFragmentById(R.id.container);
-        if (current instanceof SignatureFragment) {
-            return (SignatureFragment) current;
-        } else {
-            SignatureFragment signatureFragment = SignatureFragment.newInstance(confirmRequestWrapper);
-            toFragment(signatureFragment);
-            return signatureFragment;
+        if (paymentFragment != null && paymentFragment.isAdded()) {
+            transaction.hide(paymentFragment);
         }
+        transaction.commit();
     }
 
     @Override
@@ -111,10 +106,11 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
 //            });
 //        }
 //        else {
-        toPaymentFragment();//.proceedToDevicesDiscovery(paymentFlowController);
+        showPaymentFragment();
+        Log.d(TAG, "onCreate: show payment fragment");
 //        }
         receiver = RxBroadcastReceiver.create(this, new IntentFilter(Intent.ACTION_SCREEN_OFF))
-                .subscribe(intent -> toPaymentFragment().showPaymentResult(false));
+                .subscribe(intent -> paymentFragment.showPaymentResult(false));
 //        isDestroyed = false;
     }
 
@@ -141,6 +137,11 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
 //        handlePaymentInterrupted();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        paymentFragment.proceedToDevicesDiscovery(paymentFlowController);
+    }
 //    private void handlePaymentInterrupted() {
 //        if (signatureConfirmationDialog != null) {
 //            signatureConfirmationDialog.dismiss();
@@ -153,21 +154,13 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
         super.onBackPressed();
     }
 
-    private void runOnUiThreadIfNotDestroyed(final Runnable runnable) {
-        if (!isDestroyed) runOnUiThread(runnable);
-    }
-
-    //    public void requestCustomerSignature(){
-//        RxDialog.create(this, R.string.acceptsdk_dialog_signature_instruction_title, R.string.acceptsdk_dialog_signature_instruction_message, android.R.string.ok)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(click->{
-//                    Intent intent = new Intent(AbstractPaymentFlowActivity.this, SignatureFragment.class);
-//                    startActivityForResult(intent, Constants.REQUEST_SIGNATURE);
-//                });
+//    private void runOnUiThreadIfNotDestroyed(final Runnable runnable) {
+//        if (!isDestroyed) runOnUiThread(runnable);
 //    }
+
     @Override
     public void onPaymentFlowUpdate(PaymentFlowController.Update update) {
-        PaymentFragment paymentFragment = toPaymentFragment();
+//        PaymentFragment paymentFragment = toPaymentFragment();
         switch (update) {
             case CONFIGURATION_UPDATE:
                 paymentFragment.showProgress(R.string.acceptsdk_progress__ca_keys, true);
@@ -214,7 +207,8 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
                 break;
             case WAITING_FOR_SIGNATURE_CONFIRMATION:
 //            paymentFragment.showProgress(R.string.acceptsdk_progress__confirm_signature, false);
-                toSignatureFragment(null).hideButtons();
+                showSignatureFragment(null);
+                signatureFragment.hideButtons();
                 //just need to show captured signature on display for confirm
                 break;
             case TERMINATING:
@@ -235,12 +229,12 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
 
     @Override
     public void onPaymentFlowError(PaymentFlowController.Error error, String s) {
-        toPaymentFragment().showPaymentFlowError(error, s);
+        paymentFragment.showPaymentFlowError(error, s);
     }
 
     @Override
     public void onPaymentSuccessful(Payment payment, String s) {
-        toPaymentFragment().successfulPayment();
+        paymentFragment.successfulPayment();
     }
 
 
@@ -253,7 +247,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
      */
     @Override
     public void onSignatureRequested(PaymentFlowController.SignatureRequest signatureRequest) {
-        toSignatureFragment(new ConfirmRequestWrapper(signatureRequest));
+        showSignatureFragment(new ConfirmRequestWrapper(signatureRequest));
     }
 
     /**
@@ -265,11 +259,10 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity<PaymentFl
      */
     @Override
     public void onSignatureConfirmationRequested(PaymentFlowController.SignatureConfirmationRequest signatureConfirmationRequest) {
-        toSignatureFragment(new ConfirmRequestWrapper(signatureConfirmationRequest));
+        showSignatureFragment(new ConfirmRequestWrapper(signatureConfirmationRequest));
+        if(!isSignatureConfirmationInApplication()){
+            signatureFragment.hideButtons();
+        }
     }
 
-    @Override
-    public void startPayment(PaymentFlowController.Device device, String amount) {
-        getPresenter().proceedToPayment(device, amount);
-    }
 }

@@ -1,6 +1,5 @@
 package com.wirecard.accept.activities.paymentflow.payment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.BaseFragment;
+import com.wirecard.accept.activities.base.BaseFragment;
 import com.wirecard.accept.exceptions.DeviceDiscoverException;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.DiscoverDevices;
@@ -22,12 +21,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
+import nucleus.factory.RequiresPresenter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by super on 07.01.2017.
  */
 
+@RequiresPresenter(PaymentPresenter.class)
 public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     @BindView(R.id.progress)
     ProgressBar progressBar;
@@ -35,39 +36,55 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     TextView status;
     @BindView(R.id.amount)
     TextView amount;
+    private PaymentFlowController controller;
 
-    private PaymentContract paymentContract;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        paymentContract = (PaymentContract) context;
+    public void setController(PaymentFlowController controller) {
+        this.controller = controller;
     }
 
-    public static PaymentFragment newInstance(int initialStatusRes) {
+    //    private PaymentContract paymentContract;
+
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        paymentContract = (PaymentContract) context;
+//    }
+
+
+    public static PaymentFragment newInstance(PaymentFlowController controller) {
         Bundle args = new Bundle();
-        if (initialStatusRes != -1) {
-            args.putInt(Constants.INITIAL_MESSAGE, initialStatusRes);
-        }
+        //TODO consider passing controller as serialized/parceled argument to handle config changes
         PaymentFragment fragment = new PaymentFragment();
         fragment.setArguments(args);
+        fragment.setController(controller);
         return fragment;
     }
 
     public static PaymentFragment newInstance() {
-        return newInstance(-1);
+        return newInstance(null);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.payment_fragment, container, false);
-        ButterKnife.bind(this, view);
         if (getArguments().containsKey(Constants.INITIAL_MESSAGE)) {
             status.setText(savedInstanceState.getInt(Constants.INITIAL_MESSAGE));
         }
         return view;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+    }
+
+    //    @Override
+//    public void onResume() {
+//        super.onResume();
+//        proceedToDevicesDiscovery();
+//    }
 
     public void showTerminalDiscoveryError(DeviceDiscoverException exception) {
 //TODO check leakage and use unsubscribe after
@@ -85,13 +102,15 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(chosenDevice -> {
                                 showProgress(getString(R.string.acceptsdk_progress__connecting, devices.get(chosenDevice).displayName), true);
-                                paymentContract.startPayment(devices.get(chosenDevice), "29.5");
+                                getPresenter().proceedToPayment(devices.get(chosenDevice), "29.5", (PaymentFlowController.PaymentFlowDelegate) getActivity());
+//        amountTextView.setText(CurrencyUtils.format(amountUnits, amountCurrency, Locale.getDefault()));
                             },
                             cancel -> {
                                 getActivity().finish();
                             });
         }
     }
+
 
     public void showPaymentResult(final boolean success) {
 //        runOnUiThreadIfNotDestroyed(() -> {
@@ -118,6 +137,9 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
 //        });
     }
 
+    public void setAmount(String amount){
+        this.amount.setText(amount);
+    }
     public void successfulPayment() {
 //        runOnUiThreadIfNotDestroyed(()->{
         showPaymentResult(true);
@@ -128,8 +150,6 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
 
 
     public void showNoDeviceError() {
-        /*                .setTitle(R.string.acceptsdk_dialog_no_terminals_title)
-                .setMessage(R.string.acceptsdk_dialog_no_terminals_message)*/
         RxDialog.create(getActivity(), R.string.acceptsdk_dialog_no_terminals_title, R.string.acceptsdk_dialog_no_terminals_message, android.R.string.ok)
                 .subscribe(click -> getActivity().finish());
     }
@@ -139,7 +159,6 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
      */
     public void proceedToDevicesDiscovery(PaymentFlowController controller) {
         showProgress(R.string.acceptsdk_progress__searching, true);
-
         getPresenter().startDeviceDiscovery(getActivity(), controller);
     }
 }

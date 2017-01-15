@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.BaseActivity;
+import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.help.Constants;
 
 import butterknife.BindView;
