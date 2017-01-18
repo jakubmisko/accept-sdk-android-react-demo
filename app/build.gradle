@@ -12,7 +12,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "de.wirecard.accept.sample"
         minSdkVersion 12
@@ -57,10 +57,10 @@ android {
     }
     productFlavors {
         flavor_bbpos {
-            applicationId 'de.wirecard.accept.sample.bbpos'
+//            applicationId 'com.wirecard.accept.bbpos'
         }
         flavor_thyron {
-            applicationId 'de.wirecard.accept.sample.thyron'
+//            applicationId 'com.wirecard.accept.thyron'
         }
     }
 
@@ -71,6 +71,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    testOptions {
+        unitTests.all {
+            systemProperty 'robolectric.logging.enabled', true
+            unitTests.returnDefaultValues = true
+        }
+        useLibrary 'org.apache.http.legacy'
+    }
+
 
 }
 
@@ -78,8 +86,7 @@ dependencies {
     compile(name: 'accept-sdk-android-acceptsdksource-release', ext: 'aar')
     flavor_thyronCompile(name: 'accept-sdk-android-thyronextension-release', ext: 'aar')
     flavor_bbposCompile(name: 'accept-sdk-android-bbposextension-release', ext: 'aar')
-// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
 
     compile 'com.android.support:appcompat-v7:25.1.0'
 //    compile 'com.github.mposSVK:acceptSDK-Android:1.5.4'
@@ -98,5 +105,27 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
-    testCompile "org.robolectric:robolectric:3.1"
+
+
+    testCompile ('org.robolectric:robolectric:3.0') {
+        exclude module: 'classworlds'
+        exclude module: 'commons-logging'
+        exclude module: 'httpclient'
+    }
+//    testCompile 'org.mockito:mockito-core:2.6.3'
+    testCompile 'junit:junit:4.12'
+    //powermock
+//    androidTestCompile 'org.mockito:mockito-core:2.0.42-beta'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.6'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.6'
+//    testCompile group: 'org.easymock', name: 'easymock', version: '3.4'
+//    testCompile group: 'org.powermock', name: 'powermock-api-easymock', version: '1.6.2'
+
+    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.6'
+//    testCompile group: 'org.powermock', name: 'powermock-core', version: '1.6.2'
+
+//    androidTestCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+//essreso
+//    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 }
