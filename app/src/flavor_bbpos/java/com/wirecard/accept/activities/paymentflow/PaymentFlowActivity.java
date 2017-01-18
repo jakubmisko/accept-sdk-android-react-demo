@@ -1,4 +1,4 @@
-package com.wirecard.accept.activities;
+package com.wirecard.accept.activities.paymentflow;
 
 import com.wirecard.accept.activities.paymentflow.AbstractPaymentFlowActivity;
 
