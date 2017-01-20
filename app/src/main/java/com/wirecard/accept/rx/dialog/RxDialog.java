@@ -98,7 +98,8 @@ public class RxDialog {
                     .setCancelable(false)
                     .setSingleChoiceItems(items, -1, (dialogInterface, i) -> {
                         subscriber.onNext(i);
-//                        subscriber.onCompleted();
+                        subscriber.onCompleted();
+                        dialogInterface.dismiss();
                     })
                     .setNegativeButton(negativeBtn, (dialogInterface, i) -> {
 //                        subscriber.onNext(-1);

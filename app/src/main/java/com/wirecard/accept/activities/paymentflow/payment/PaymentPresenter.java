@@ -2,6 +2,8 @@ package com.wirecard.accept.activities.paymentflow.payment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.widget.Toast;
 
 import com.wirecard.accept.exceptions.DeviceDiscoverException;
 import com.wirecard.accept.help.CurrencyUtils;
@@ -66,8 +68,11 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
         final long amountUnits = AcceptSDK.getPaymentTotalAmount().scaleByPowerOfTen(amountCurrency.getDefaultFractionDigits()).longValue();
         view().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(view -> {
-                    view.setAmount(CurrencyUtils.format(amountUnits, amountCurrency, Locale.getDefault()));
-                });
+                            view.setAmount(CurrencyUtils.format(amountUnits, amountCurrency, Locale.getDefault()));
+                        },
+                        err -> {
+                            Toast.makeText(context, err.getMessage(), Toast.LENGTH_LONG).show();
+                        });
         controller.startPaymentFlow(device, amountUnits, amountCurrency, delegate);
     }
 

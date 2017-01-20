@@ -102,7 +102,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(chosenDevice -> {
                                 showProgress(getString(R.string.acceptsdk_progress__connecting, devices.get(chosenDevice).displayName), true);
-                                getPresenter().proceedToPayment(devices.get(chosenDevice), "29.5", (PaymentFlowController.PaymentFlowDelegate) getActivity());
+                                getPresenter().proceedToPayment(devices.get(chosenDevice), "10.0", (PaymentFlowController.PaymentFlowDelegate) getActivity());
 //        amountTextView.setText(CurrencyUtils.format(amountUnits, amountCurrency, Locale.getDefault()));
                             },
                             cancel -> {
