@@ -27,4 +27,6 @@ public interface Constants {
     String PAYMENT_FRAGMENT_TAG = "pay_frag";
     String SINGATURE_FRAGMENT_TAG = "sign_frag";
 
+    String AMOUNT = "amount";
+    String PAYMENT_METHOD = "method";
 }

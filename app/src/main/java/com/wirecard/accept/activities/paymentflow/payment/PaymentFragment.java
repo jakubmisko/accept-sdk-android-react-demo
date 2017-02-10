@@ -36,58 +36,40 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     TextView status;
     @BindView(R.id.amount)
     TextView amount;
-    private PaymentFlowController controller;
 
-    public void setController(PaymentFlowController controller) {
-        this.controller = controller;
-    }
-
-    //    private PaymentContract paymentContract;
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        paymentContract = (PaymentContract) context;
-//    }
-
-
-    public static PaymentFragment newInstance(PaymentFlowController controller) {
-        Bundle args = new Bundle();
-        //TODO consider passing controller as serialized/parceled argument to handle config changes
+    /**
+     * create payment fragment instance with amount to be payed, payment method and sepa flag
+     * @param arguments amount, payment method and sepa parameters
+     * @return payment fragment
+     */
+    public static PaymentFragment newInstance(Bundle arguments) {
         PaymentFragment fragment = new PaymentFragment();
-        fragment.setArguments(args);
-        fragment.setController(controller);
+        fragment.setArguments(arguments);
         return fragment;
-    }
-
-    public static PaymentFragment newInstance() {
-        return newInstance(null);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.payment_fragment, container, false);
-        if (getArguments().containsKey(Constants.INITIAL_MESSAGE)) {
-            status.setText(savedInstanceState.getInt(Constants.INITIAL_MESSAGE));
-        }
-        return view;
+        return inflater.inflate(R.layout.payment_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        if (getArguments().containsKey(Constants.INITIAL_MESSAGE)) {
+            status.setText(getArguments().getInt(Constants.INITIAL_MESSAGE));
+        }
+        //set amount to text view with currency
+        if (getArguments().containsKey(Constants.AMOUNT)) {
+            String amountWithCurrency = getPresenter().buildAmountWithCurrency(getArguments().getString(Constants.AMOUNT));
+            amount.setText(amountWithCurrency);
+        }
     }
 
-    //    @Override
-//    public void onResume() {
-//        super.onResume();
-//        proceedToDevicesDiscovery();
-//    }
-
     public void showTerminalDiscoveryError(DeviceDiscoverException exception) {
-//TODO check leakage and use unsubscribe after
+        //TODO check leakage and use unsubscribe after
         RxDialog.create(getActivity(), getString(R.string.acceptsdk_dialog_discovery_error_title), getString(R.string.acceptsdk_dialog_discovery_error_message,
                 exception.getDiscoveryError() + " - " + exception.getMessage()), getString(android.R.string.ok))
                 .subscribe(click -> getActivity().finish());
@@ -95,6 +77,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
 
     public void terminalChooser(List<PaymentFlowController.Device> devices) {
         if (devices.isEmpty()) {
+            //present no bounded devices error
             showNoDeviceError();
         } else {
             String[] devicesNames = DiscoverDevices.getDeviceNames(devices);
@@ -102,8 +85,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(chosenDevice -> {
                                 showProgress(getString(R.string.acceptsdk_progress__connecting, devices.get(chosenDevice).displayName), true);
-                                getPresenter().proceedToPayment(devices.get(chosenDevice), "29.5", (PaymentFlowController.PaymentFlowDelegate) getActivity());
-//        amountTextView.setText(CurrencyUtils.format(amountUnits, amountCurrency, Locale.getDefault()));
+                                getPresenter().proceedToCardPayment(devices.get(chosenDevice), amount.getText().toString(), (PaymentFlowController.PaymentFlowDelegate) getActivity());
                             },
                             cancel -> {
                                 getActivity().finish();
@@ -137,9 +119,10 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
 //        });
     }
 
-    public void setAmount(String amount){
+    public void setAmount(String amount) {
         this.amount.setText(amount);
     }
+
     public void successfulPayment() {
 //        runOnUiThreadIfNotDestroyed(()->{
         showPaymentResult(true);
@@ -160,5 +143,13 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     public void proceedToDevicesDiscovery(PaymentFlowController controller) {
         showProgress(R.string.acceptsdk_progress__searching, true);
         getPresenter().startDeviceDiscovery(getActivity(), controller);
+    }
+
+    public void startPayment(PaymentFlowController paymentFlowController) {
+        if(getArguments().containsKey(Constants.PAYMENT_METHOD) && getArguments().getString(Constants.PAYMENT_METHOD).equals("Cash")){
+            getPresenter().payByCash(amount.getText());
+        } else {
+            proceedToDevicesDiscovery(paymentFlowController);
+        }
     }
 }

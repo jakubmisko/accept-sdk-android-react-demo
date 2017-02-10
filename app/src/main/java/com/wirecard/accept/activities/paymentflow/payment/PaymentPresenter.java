@@ -15,7 +15,6 @@ import de.wirecard.accept.sdk.AcceptSDK;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import de.wirecard.accept.sdk.model.PaymentItem;
 import nucleus.presenter.RxPresenter;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by super on 07.01.2017.
@@ -48,27 +47,29 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
         start(DISCOVER_DEVICES);
     }
 
+    String buildAmountWithCurrency(String amount){
+        final Currency currency = Currency.getInstance(AcceptSDK.getCurrency());
+        return CurrencyUtils.format(amount, currency, Locale.getDefault());
+    }
 
     /**
      * second step: pay with discovered device
      *
      * @param device
      */
-    public void proceedToPayment(final PaymentFlowController.Device device, String amount, PaymentFlowController.PaymentFlowDelegate delegate) {
-
+    public void proceedToCardPayment(final PaymentFlowController.Device device, String amount, PaymentFlowController.PaymentFlowDelegate delegate) {
         AcceptSDK.startPayment();
         Float tax;
         if (AcceptSDK.getPrefTaxArray().isEmpty())
             tax = 0f;
         else tax = AcceptSDK.getPrefTaxArray().get(0);
         AcceptSDK.addPaymentItem(new PaymentItem(1, "", new BigDecimal(amount), tax));
-        final Currency amountCurrency = Currency.getInstance(AcceptSDK.getCurrency());
-        final long amountUnits = AcceptSDK.getPaymentTotalAmount().scaleByPowerOfTen(amountCurrency.getDefaultFractionDigits()).longValue();
-        view().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view -> {
-                    view.setAmount(CurrencyUtils.format(amountUnits, amountCurrency, Locale.getDefault()));
-                });
-        controller.startPaymentFlow(device, amountUnits, amountCurrency, delegate);
+        final Currency currency = Currency.getInstance(AcceptSDK.getCurrency());
+        final long amountUnits = AcceptSDK.getPaymentTotalAmount().scaleByPowerOfTen(currency.getDefaultFractionDigits()).longValue();
+        controller.startPaymentFlow(device, amountUnits, Currency.getInstance(AcceptSDK.getCurrency()), delegate);
     }
 
+    public void payByCash(CharSequence amount) {
+        //todo cash payment
+    }
 }
