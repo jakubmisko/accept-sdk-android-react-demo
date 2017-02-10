@@ -4,7 +4,7 @@ import de.wirecard.accept.extension.refactor.AcceptThyronPaymentFlowController;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 
 /**
- * Created by jakub on 16.06.2016.
+ * Spire terminal flow.
  */
 public class PaymentFlowActivity extends AbstractPaymentFlowActivity {
     @Override

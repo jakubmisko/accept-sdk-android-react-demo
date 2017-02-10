@@ -34,12 +34,14 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
     protected void onCreate(@Nullable Bundle savedState) {
         super.onCreate(savedState);
         restartableLatestCache(LOAD_PAYMENTS,
+                //do request for payments on background
                 () -> Observable.create((Observable.OnSubscribe<List<Payment>>) subscriber ->
                                 AcceptSDK.getPaymentsList(pageNum, pageSize, null, null, (apiResult, result) -> {
                                     if (apiResult.isSuccess()) {
                                         subscriber.onNext(result);
                                         subscriber.onCompleted();
                                     } else {
+                                        //wrap problem to throwable
                                         subscriber.onError(new Throwable(apiResult.getDescription()));
                                     }
                                 })
@@ -48,10 +50,13 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
                         .subscribeOn(Schedulers.io())
                         //handle data presentation on main ui thread
                         .observeOn(AndroidSchedulers.mainThread()),
+                //present data
                 TransactionsHistoryActivity::fillListView,
+                //present error
                 TransactionsHistoryActivity::paymentsLoadingError
 
         );
+        //do reverse/refund request for transaction
         restartableFirst(REVERSE_REFUND,
                 () -> Observable.create((Observable.OnSubscribe<AcceptBackendService.Response>) subscriber -> {
                     if (payment.isReversible()) {
@@ -66,11 +71,12 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
                         //not much to put here just indicate that payment can not be reversed/refunded
                         subscriber.onError(new Throwable());
                     }
-                }).subscribeOn(Schedulers.io())
+                })
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
-
+                //present successful action
                 TransactionsHistoryActivity::notifyReverseRefund,
-
+                //present that action could not be performed
                 (transactionsHistoryActivity, throwable) -> transactionsHistoryActivity.unableToReverseRefund()
         );
     }
@@ -79,6 +85,7 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
     public void reverseOrRefund(Payment payment) {
         Log.d(TAG, "reverseOrRefund: amount " + payment.getTotalAmount());
         this.payment = payment;
+        //start restartable for reverse/refund
         start(REVERSE_REFUND);
     }
 
@@ -88,6 +95,7 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
         this.since = since;
         this.until = until;
         Log.d(TAG, "loadPayments");
+        //start restartable for loading payments
         start(LOAD_PAYMENTS);
     }
 }

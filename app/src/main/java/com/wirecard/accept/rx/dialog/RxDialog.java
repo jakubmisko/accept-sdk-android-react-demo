@@ -10,7 +10,7 @@ import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
 
 /**
- * Created by super on 26.11.2016.
+ * Work with dialogs as event streams
  */
 
 public class RxDialog {

@@ -1,8 +1,7 @@
 /**
- *  Copyright (c) 2015 Wirecard. All rights reserved.
- *
- *  Accept SDK for Android
- *
+ * Copyright (c) 2015 Wirecard. All rights reserved.
+ * <p>
+ * Accept SDK for Android
  */
 package com.wirecard.accept.activities.paymentflow.signature;
 
@@ -21,6 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * capture user signature on display
+ */
 public class SignatureView extends View {
 
     private Paint signaturePaint;
@@ -28,9 +30,9 @@ public class SignatureView extends View {
     private Canvas signatureCanvas;
     private SVPath signaturePath;
     private Paint signatureBitmapPaint;
-
+    private float lastX, lastY;
+    private static final float TOUCH_TOLERANCE = 4;
     private ArrayList<SVPath> paths;
-
     private boolean wasTouched = false;
 
     public SignatureView(Context context) {
@@ -48,9 +50,12 @@ public class SignatureView extends View {
     public SignatureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initPainting();
-        paths = new ArrayList<SVPath>();
+        paths = new ArrayList<>();
     }
 
+    /**
+     * do initialisation of painting tools
+     */
     private void initPainting() {
         signatureBitmapPaint = new Paint(Paint.DITHER_FLAG);
         signaturePaint = new Paint();
@@ -64,6 +69,13 @@ public class SignatureView extends View {
         signaturePath = new SVPath();
     }
 
+    /**
+     * handle size change
+     * @param w witdh
+     * @param h height
+     * @param oldw old width
+     * @param oldh old height
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -75,37 +87,27 @@ public class SignatureView extends View {
         return wasTouched;
     }
 
-    public void clear() {
-        wasTouched = false;
-        if (signatureBitmap != null) {
-            signatureBitmap = Bitmap.createBitmap(signatureBitmap.getWidth(), signatureBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-            signatureCanvas = new Canvas(signatureBitmap);
-        }
-    }
-
-    public Bitmap getSignatureBitmap() {
-        if ( signatureBitmap == null ) {
-            return null;
-        }
-        return Bitmap.createBitmap(signatureBitmap);
-    }
-
+    /**
+     * compres drawn bitmap to byte array, scale to half size of original picture
+     * @return
+     */
     public byte[] compressSignatureBitmapToPNG() {
-        final Bitmap scaledBitmap = Bitmap.createScaledBitmap(signatureBitmap, signatureBitmap.getWidth()/2, signatureBitmap.getHeight()/2, true);
+        final Bitmap scaledBitmap = Bitmap.createScaledBitmap(signatureBitmap, signatureBitmap.getWidth() / 2, signatureBitmap.getHeight() / 2, true);
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         scaledBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return outputStream.toByteArray();
     }
 
+    /**
+     *
+     * @param viewCanvas
+     */
     @Override
     protected void onDraw(Canvas viewCanvas) {
         super.onDraw(viewCanvas);
         viewCanvas.drawBitmap(signatureBitmap, 0, 0, signatureBitmapPaint);
         viewCanvas.drawPath(signaturePath, signaturePaint);
     }
-
-    private float lastX, lastY;
-    private static final float TOUCH_TOLERANCE = 4;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -153,7 +155,7 @@ public class SignatureView extends View {
     }
 
     public void serialize(Bundle bundle) {
-        if(bundle == null) return;
+        if (bundle == null) return;
         ArrayList<SVPath> temp = new ArrayList<>();
         temp.addAll(paths);
         temp.remove(signaturePath);
@@ -162,12 +164,12 @@ public class SignatureView extends View {
     }
 
     public void showSignature(Bundle bundle) {
-        if(bundle == null) return;
+        if (bundle == null) return;
         SVPathContainer con = (SVPathContainer) bundle.getSerializable("PATHS");
-        if(con == null) return;
+        if (con == null) return;
         paths.clear();
         paths.addAll(con.getPaths());
-        for(SVPath p: paths) {
+        for (SVPath p : paths) {
             p.redraw();
         }
         signaturePath = new SVPath();
@@ -177,6 +179,7 @@ public class SignatureView extends View {
     public static class SVPathContainer implements Serializable {
         private static final long serialVersionUID = 1L;
         protected ArrayList<SVPath> paths = new ArrayList<SVPath>();
+
         public ArrayList<SVPath> getPaths() {
             return paths;
         }
@@ -199,22 +202,33 @@ public class SignatureView extends View {
         private float p1y = 0;
         private float p2y = 0;
 
-        public float getP1X() { return p1x; }
-        public float getP1Y() { return p1y; }
-        public float getP2X() { return p2x; }
-        public float getP2Y() { return p2y; }
+        public float getP1X() {
+            return p1x;
+        }
+
+        public float getP1Y() {
+            return p1y;
+        }
+
+        public float getP2X() {
+            return p2x;
+        }
+
+        public float getP2Y() {
+            return p2y;
+        }
 
         public int getActionType() {
             return actionType;
         }
 
-        public SVPathAction( int actionType, float p1x, float p1y) {
+        public SVPathAction(int actionType, float p1x, float p1y) {
             this.actionType = actionType;
             this.p1x = p1x;
             this.p1y = p1y;
         }
 
-        public SVPathAction( int actionType, float p1x, float p1y, float p2x, float p2y) {
+        public SVPathAction(int actionType, float p1x, float p1y, float p2x, float p2y) {
             this(actionType, p1x, p1y);
             this.p2x = p2x;
             this.p2y = p2y;
@@ -227,13 +241,13 @@ public class SignatureView extends View {
 
         public boolean redraw() {
             boolean dirty = false;
-            for(SVPathAction action: actions) {
-                if(action.getActionType() == SVPathAction.ACTION_LINE) {
+            for (SVPathAction action : actions) {
+                if (action.getActionType() == SVPathAction.ACTION_LINE) {
                     super.lineTo(action.getP1X(), action.getP1Y());
                     dirty = true;
-                } else if(action.getActionType() == SVPathAction.ACTION_MOVE) {
+                } else if (action.getActionType() == SVPathAction.ACTION_MOVE) {
                     super.moveTo(action.getP1X(), action.getP1Y());
-                } else if(action.getActionType() == SVPathAction.ACTION_QUAD) {
+                } else if (action.getActionType() == SVPathAction.ACTION_QUAD) {
                     super.quadTo(action.getP1X(), action.getP1Y(), action.getP2X(), action.getP2Y());
                     dirty = true;
                 }

@@ -93,11 +93,9 @@ public class TransactionsHistoryActivity extends BaseActivity<TransactionHistior
             AcceptTransaction body = (AcceptTransaction) response.getBody();
             if (body.status == AcceptTransaction.Status.reversed) {
                 Toast.makeText(this, R.string.reversed, Toast.LENGTH_LONG).show();
-//                payment.setStatusToReversed();
                 ((PaymentAdapter) listView.getAdapter()).notifyDataSetChanged();
             } else if (body.status == AcceptTransaction.Status.refunded) {
-                Toast.makeText(this, R.string.refunded, Toast.LENGTH_LONG).show();
-//                payment.setStatusToRefunded();
+                Toast.makeText(this, R.string.refunded, Toast.LENGTH_LONG).show();;
                 ((PaymentAdapter) listView.getAdapter()).notifyDataSetChanged();
             } else {
                 Toast.makeText(this, R.string.reversed_or_refunded, Toast.LENGTH_LONG).show();

@@ -16,7 +16,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by jakub.misko on 14. 4. 2016.
+
  */
 public abstract class BaseActivity<P extends Presenter> extends NucleusActivity<P> {
     final String TAG = BaseActivity.class.getSimpleName();

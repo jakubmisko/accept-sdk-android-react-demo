@@ -96,4 +96,9 @@
     <string name="fw_update_message_bt_connecting">Bluetooth pairing: connecting</string>
     <string name="fw_update_failed_download_and_extract">Failed to open the zipped configuration file</string>
 
+    <string-array name="payment_methods">
+        <item>Card</item>
+        <item>Cash</item>
+    </string-array>
+
 </resources>

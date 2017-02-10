@@ -21,7 +21,7 @@ import de.wirecard.accept.sdk.cnp.observer.TerminalEvent;
 import nucleus.factory.RequiresPresenter;
 
 /**
- * Created by jakub on 10.04.2016.
+ * Firmware update activity
  */
 
 @RequiresPresenter(FirmwareUpdatePresenter.class)
@@ -40,6 +40,7 @@ public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firmware_update);
         ButterKnife.bind(this);
+        //store choosen device
         getPresenter().setCurrentDev(getIntent().getExtras().getParcelable(Constants.EXTRA_SELECTED_DEVICE));
         setResult(RESULT_CANCELED);
     }
@@ -146,14 +147,11 @@ public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter
         Log.d(TAG, "onTerminalEvent: " + terminalEvent);
         switch (terminalEvent) {
             case CONFIG_UPDATE_FINISHED:
-
+            case FIRMWARE_UPDATE_AVAILABLE:
                 break;
             case CONFIG_UPDATE_STARTED:
                 progress_text.setText(R.string.processing);
                 message_text.setText(R.string.installing_fw);
-                break;
-            case FIRMWARE_UPDATE_AVAILABLE:
-
                 break;
             case FIRMWARE_UPDATE_FINISHED:
                 progress_text.setText(R.string.blank);

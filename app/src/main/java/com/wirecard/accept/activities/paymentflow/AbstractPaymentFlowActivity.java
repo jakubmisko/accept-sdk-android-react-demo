@@ -28,22 +28,16 @@ import de.wirecard.accept.sdk.model.Payment;
 import rx.Subscription;
 
 /**
- * Basin payment flow controlling activity
+ * Basic payment flow controlling activity
  */
-//TODO find place when signature fragment should be replaced with payment frag
 public abstract class AbstractPaymentFlowActivity extends BaseActivity implements PaymentFlowController.PaymentFlowDelegate {
-
-    private Subscription receiver;
-
-    protected PaymentFlowController paymentFlowController;
-
-    protected Boolean sepa = false;// used for sepa payment support
-    Bundle sign = null;
-    private PaymentFragment paymentFragment;
-    private SignatureFragment signatureFragment;
-
+    //container for fragments
     @BindView(R.id.container)
     View content;
+    private Subscription receiver;
+    protected PaymentFlowController paymentFlowController;
+    private PaymentFragment paymentFragment;
+    private SignatureFragment signatureFragment;
     private String TAG = getClass().getSimpleName();
 
 
@@ -56,7 +50,8 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
         if (paymentFragment != null && paymentFragment.isAdded()) {
             transaction.show(paymentFragment);
         } else {
-            paymentFragment = PaymentFragment.newInstance();
+           //pass arguments from amount activity to payment fragment
+            paymentFragment = PaymentFragment.newInstance(getIntent().getExtras());
             transaction.add(R.id.container, paymentFragment, Constants.PAYMENT_FRAGMENT_TAG);
         }
         if (signatureFragment != null && signatureFragment.isAdded()) {
@@ -84,31 +79,13 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_activity);
-
-        final Bundle b = getIntent().getExtras();
-        if (b != null) {
-            sepa = b.getBoolean(Constants.SEPA, false);
-        }
-
         paymentFlowController = createNewController();
-
         if (paymentFlowController == null)
             throw new IllegalArgumentException("You have to implement createNewController()");
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-//        if (paymentFlowController instanceof AcceptThyronPaymentFlowController && ((Application) getApplicationContext()).usb) {
-//            ((AcceptThyronPaymentFlowController) paymentFlowController).registerDiscoveryReadyListener(new AcceptThyronPaymentFlowController.DiscoveryReadyListener() {
-//                @Override
-//                public void onDiscoveryReady() {
-//                    proceedToDevicesDiscovery();
-//                }
-//            });
-//        }
-//        else {
         showPaymentFragment();
         Log.d(TAG, "onCreate: show payment fragment");
-//        }
         receiver = RxBroadcastReceiver.create(this, new IntentFilter(Intent.ACTION_SCREEN_OFF))
                 .subscribe(intent -> paymentFragment.showPaymentResult(false));
 //        isDestroyed = false;
@@ -140,7 +117,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     @Override
     protected void onResume() {
         super.onResume();
-        paymentFragment.proceedToDevicesDiscovery(paymentFlowController);
+        paymentFragment.startPayment(paymentFlowController);
     }
 //    private void handlePaymentInterrupted() {
 //        if (signatureConfirmationDialog != null) {
@@ -160,7 +137,6 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
 
     @Override
     public void onPaymentFlowUpdate(PaymentFlowController.Update update) {
-//        PaymentFragment paymentFragment = toPaymentFragment();
         switch (update) {
             case CONFIGURATION_UPDATE:
                 paymentFragment.showProgress(R.string.acceptsdk_progress__ca_keys, true);

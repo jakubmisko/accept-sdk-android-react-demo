@@ -22,10 +22,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by jakub on 24.06.2016.
+ * Presentation logic of menu activity
  */
 //TODO rewrite with composition
-public class MenuPresenter extends RxPresenter<MenuActivity> {
+class MenuPresenter extends RxPresenter<MenuActivity> {
     private Context context;
     private PaymentFlowController.Device device;
     private AcceptThyronPaymentFlowController controller;
@@ -35,34 +35,36 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        //todo consider using fromCallable to make cold observerable=created when observer subscribe
+        controller = new AcceptThyronPaymentFlowController(false, true);
+        //request for paired devices
         restartableLatestCache(DISCOVER_DEVICES,
                 //factory
-                ()->{
-
-                    return DiscoverDevices.devices(context, new AcceptThyronPaymentFlowController(false, true));
-                },
+                () -> DiscoverDevices.devices(context, controller),
                 //success
                 MenuActivity::presentDiscoveredDevices,
                 //failure
                 (menuActivity, throwable) -> menuActivity.presentDiscoveryError((DeviceDiscoverException) throwable)
         );
-
-        restartableLatestCache(VERSION_CHECK, () -> Observable.create((Observable.OnSubscribe<AcceptBackendService.Response<AcceptFirmwareVersion, Void>>) subscriber -> {
-                    //clear remembered data
-                    AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);
-                    //setup new data and remember
-                    AcceptBackendService.Response<AcceptFirmwareVersion, Void> response = AcceptSDK.fetchFirmwareVersionInfo();
-
-                    if (response == null || response.hasError()) {
-                        //TODO wrap error to exception?
-                        subscriber.onError(new Throwable());
-                    } else {
-                        subscriber.onNext(response);
-                    }
-                }
-                ), (menuActivity, acceptFirmwareVersion) -> {
+        //request for info about firmware stored on back end
+        restartableLatestCache(VERSION_CHECK,
+                //factory of request
+                () -> Observable.create((Observable.OnSubscribe<AcceptBackendService.Response<AcceptFirmwareVersion, Void>>) subscriber -> {
+                            //clear remembered data
+                            AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);
+                            //setup new data and remember
+                            AcceptBackendService.Response<AcceptFirmwareVersion, Void> response = AcceptSDK.fetchFirmwareVersionInfo();
+                            if (response == null || response.hasError()) {
+                                //TODO wrap error to exception
+                                subscriber.onError(new Throwable());
+                            } else {
+                                subscriber.onNext(response);
+                                subscriber.onCompleted();
+                            }
+                        }
+                ),
+                (menuActivity, acceptFirmwareVersion) -> {
                     AcceptFirmwareVersion currentVersionDataFormBackend = acceptFirmwareVersion.getBody();
+                    //there can be problem on back end
                     if (currentVersionDataFormBackend == null || TextUtils.isEmpty(currentVersionDataFormBackend.url)) {
                         menuActivity.presentWrongBeData();
                     } else {
@@ -79,6 +81,7 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
                         }
                     }
                 },
+                //present error
                 (menuActivity, throwable) -> {
                     menuActivity.presentFwVersionError();
                 }
@@ -86,15 +89,19 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
     }
 
 
-
-
     void discoverDevices(Context context) {
         this.context = context;
-        AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);//clear remembered data
+        //clear remembered data
+        AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);
         //SDK is remembering versions per login
+        //start restartable
         start(DISCOVER_DEVICES);
     }
 
+    /**
+     * check whether it's usb or bt interface device and start version check task if everything is ok
+     * @param device choosen device
+     */
     void checkDeviceIdentity(PaymentFlowController.Device device) {
         this.device = device;
         controller.checkDeviceIdentity(device, new AcceptThyronPaymentFlowController.SimpleConnectListener() {
@@ -105,6 +112,9 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
                             menuActivity.presentSuccessfulConnect(b);
                             menuActivity.presentVersionCheckStarted();
                         });
+                //stop previous task to prevent restarting when process restarts
+                stop(DISCOVER_DEVICES);
+                //start new restartable task
                 start(VERSION_CHECK);
             }
 
@@ -120,8 +130,6 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
                         .subscribe(menuActivity -> menuActivity.presentError(s));
             }
         });
-
-
     }
 
 }

@@ -14,13 +14,11 @@ import com.wirecard.accept.rx.dialog.RxDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import nucleus.factory.RequiresPresenter;
 
 /**
- * Created by super on 06.01.2017.
+ * hadling of signature capture and confirmation
  */
-@RequiresPresenter(SignaturePresenter.class)
-public class SignatureFragment extends BaseFragment<SignaturePresenter> {
+public class SignatureFragment extends BaseFragment {
     @BindView(R.id.signature)
     SignatureView signatureView;
     @BindView(R.id.confirm_signature)
@@ -40,18 +38,20 @@ public class SignatureFragment extends BaseFragment<SignaturePresenter> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_signature, container, false);
+        //apply binding to ui fields
         ButterKnife.bind(this, view);
         return view;
     }
 
     @OnClick(R.id.confirm_signature)
     public void confirmHandle() {
+        //check if signature isn't blank
         if (signatureView.isSomethingDrawn()) {
-//            Bundle sign = new Bundle();
-//            signatureView.serialize(sign);
+            //when request requires data then compress bitmap to png byte array
             if(confirmRequestWrapper.requireSignature()) {
                 confirmRequestWrapper.confirm(signatureView.compressSignatureBitmapToPNG());
             } else {
+                //pass null when it's just signature confirmation
                 confirmRequestWrapper.confirm(null);
             }
         } else {
@@ -62,6 +62,7 @@ public class SignatureFragment extends BaseFragment<SignaturePresenter> {
 
     @OnClick(R.id.cancel_signature_confirmation)
     public void cancelHandle() {
+        //when you try to cancel signature show confirmation dialog
         RxDialog.create(getActivity(), R.string.acceptsdk_dialog_cancel_signature_request_title, R.string.acceptsdk_dialog_cancel_signature_request_message,
                 android.R.string.yes, android.R.string.no).filter(btn -> true).subscribe(click -> {
             confirmRequestWrapper.cancel();
@@ -72,6 +73,9 @@ public class SignatureFragment extends BaseFragment<SignaturePresenter> {
         this.confirmRequestWrapper = confirmRequestWrapper;
     }
 
+    /**
+     * hide button when it's signature confirmation, use terminal to confirm
+     */
     public void hideButtons(){
         confirm.setVisibility(View.GONE);
         cancel.setVisibility(View.GONE);

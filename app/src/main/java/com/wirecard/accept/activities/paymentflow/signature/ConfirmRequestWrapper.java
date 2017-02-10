@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 
 /**
- * Created by super on 08.01.2017.
+ * wrap signature request and signature confirmation to one request for easier work with signature fragment
  */
 
 public class ConfirmRequestWrapper {
@@ -20,6 +20,9 @@ public class ConfirmRequestWrapper {
         this.signatureConfirmationRequest = signatureConfirmationRequest;
     }
 
+    /**
+     * negative answer of request, user reject to sign or signature doesn't match with signature on card
+     */
     public void cancel(){
         if (signatureRequest != null){
             signatureRequest.signatureCanceled();
@@ -28,7 +31,11 @@ public class ConfirmRequestWrapper {
         }
     }
 
-    public void confirm(@Nullable  byte[] signature){
+    /**
+     * positive answer of request, user signed to device screen or merchant accepted signature
+     * @param signature if it's signature request than signature in byte array format is sent to back end
+     */
+    void confirm(@Nullable  byte[] signature){
         if (signatureRequest != null){
             signatureRequest.signatureEntered(signature);
         } else {
@@ -36,7 +43,7 @@ public class ConfirmRequestWrapper {
         }
     }
 
-    public boolean requireSignature(){
+    boolean requireSignature(){
         return signatureRequest != null;
     }
 }

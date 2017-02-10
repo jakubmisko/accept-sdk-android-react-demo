@@ -3,7 +3,7 @@ package com.wirecard.accept.help;
 import android.text.TextUtils;
 
 /**
- * Created by jakub on 21.06.2016.
+ * customized string builder
  */
 public class MyStringBuilder {
 

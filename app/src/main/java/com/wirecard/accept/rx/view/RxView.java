@@ -9,7 +9,7 @@ import rx.Subscriber;
 import rx.android.MainThreadSubscription;
 
 /**
- * Created by super on 24.11.2016.
+ * Reactive wrapper for onclick listener on view
  */
 
 public class RxView {
@@ -26,7 +26,7 @@ public class RxView {
                         subscriber.onNext(null);
                     }
                 };
-
+                //remove listener to avoid memory leaks
                 subscriber.add(new MainThreadSubscription() {
                     @Override protected void onUnsubscribe() {
                         view.setOnClickListener(null);

@@ -8,7 +8,7 @@ import com.wirecard.accept.R;
 import com.wirecard.accept.help.Constants;
 
 /**
- * Created by jakub on 02.04.2016.
+ * inform about corrupted configuration
  */
 public class WrongAcceptSettingsActivity extends Activity {
 

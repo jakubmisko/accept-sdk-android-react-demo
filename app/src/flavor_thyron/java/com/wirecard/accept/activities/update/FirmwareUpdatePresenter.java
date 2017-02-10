@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.wirecard.accept.help.RxHelper;
-
 import java.io.IOException;
 
 import de.wirecard.accept.sdk.AcceptSDK;
@@ -17,7 +15,6 @@ import de.wirecard.accept.sdk.cnp.observer.CNPListener;
 import de.wirecard.accept.sdk.model.TerminalInfo;
 import nucleus.presenter.RxPresenter;
 import rx.Observable;
-import rx.Subscription;
 
 /**
  * Created by jakub on 16.06.2016.
@@ -32,7 +29,6 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
     private boolean restarted = false;
     private boolean finishedUpdate = false;
     private FirmwareNumberAndUrl firmwareNumberAndUrl;
-    private Subscription handleFile;
 
     private final int DOWNLOAD_FW = 0;
     private Context context;
@@ -109,7 +105,6 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
     protected void onDropView() {
         super.onDropView();
         stop(DOWNLOAD_FW);
-        RxHelper.unsubscribe(handleFile);
         Log.d(TAG, "unregister from cnp controller");
         if (controller != null) {
             controller.setCNPListener(null);

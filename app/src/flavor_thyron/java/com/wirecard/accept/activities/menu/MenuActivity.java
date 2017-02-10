@@ -21,10 +21,9 @@ import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import nucleus.factory.RequiresPresenter;
 import rx.android.schedulers.AndroidSchedulers;
 
-//import de.wirecard.accept.extension.thyron.ThyronDevice;
 
 /**
- * Created by jakub on 10.04.2016.
+ * Menu for spire terminal flavour
  */
 
 //todo consider using snackbars

@@ -48,7 +48,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
-
         backend.setText(BuildConfig.apiPath);
         //TODO resource
         String versionStr = String.format("Version: %s(%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
@@ -68,6 +67,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
         RxHelper.unsubscribe(alertDialog);
     }
 
+    /**
+     * handle login
+     */
     @OnClick(R.id.login)
     public void handleLogin() {
         if (TextUtils.isEmpty(username.getText()) && TextUtils.isEmpty(password.getText())) {
@@ -82,18 +84,28 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
         }
     }
 
+    /**
+     * go to menu activity and finish login
+     */
     public void goToMenu() {
         startActivity(new Intent(this, MenuActivity.class));
         finish();
     }
 
-
+    /**
+     * disable or enable inputs when evaluation of credentials is performed
+     * @param flag true for enable false for disable
+     */
     public void enableForm(final boolean flag) {
         loginBtn.setEnabled(flag);
         username.setEnabled(flag);
         password.setEnabled(flag);
     }
 
+    /**
+     * present error from login evaluation
+     * @param error message
+     */
     public void presentFormError(final String error) {
         alertDialog = RxDialog.create(this, getString(R.string.login_error), error)
                 .doOnEach(notification -> enableForm(true))
@@ -104,6 +116,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
                 });
     }
 
+    /**
+     * inform that there's corrupted backend configuration
+     */
     private void checkBackendConfig() {
         String wrongSdkConfig = ((Application) getApplication()).getErrorMessage();
         if (!getPresenter().isBEConfigOk(wrongSdkConfig)) {

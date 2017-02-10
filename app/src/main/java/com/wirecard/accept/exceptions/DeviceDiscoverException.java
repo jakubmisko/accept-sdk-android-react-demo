@@ -3,7 +3,7 @@ package com.wirecard.accept.exceptions;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 
 /**
- * Created by super on 19.12.2016.
+ * exception thrown when there's problem with device discovery, wrapping discorery error
  */
 
 public class DeviceDiscoverException extends RuntimeException {

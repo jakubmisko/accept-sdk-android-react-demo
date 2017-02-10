@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
+import com.wirecard.accept.activities.amount.ChooseAmountActivity;
 import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.history.TransactionsHistoryActivity;
 import com.wirecard.accept.activities.login.LoginActivity;
-import com.wirecard.accept.activities.paymentflow.PaymentFlowActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,12 +24,13 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        //apply onclick listeners for buttons
         ButterKnife.bind(this);
     }
 
     @OnClick(R.id.payment)
     public void newPayment() {
-        startActivity(new Intent(getApplicationContext(), PaymentFlowActivity.class));
+        startActivity(new Intent(getApplicationContext(), /*PaymentFlowActivity*/ChooseAmountActivity.class));
     }
     @OnClick(R.id.history)
     public void paymentsHistory() {

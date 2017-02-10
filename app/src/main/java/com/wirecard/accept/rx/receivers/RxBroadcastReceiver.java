@@ -14,7 +14,7 @@ import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
 
 /**
- * Created by super on 19.11.2016.
+ * Wrap broadcast receiver to observerable to work with intents as stream
  */
 
 public class RxBroadcastReceiver {
