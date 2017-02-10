@@ -10,7 +10,7 @@
         android:layout_gravity="center"
         android:text="@string/payment_sign_in_label"/>
 
-    <de.wirecard.accept.sample.PaymentFlowSignatureView
+    <com.wirecard.accept.activities.paymentflow.signature.SignatureView
         android:id="@+id/signature"
         android:layout_width="match_parent"
         android:layout_height="450dp"/>

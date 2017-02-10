@@ -186,6 +186,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
                 showSignatureFragment(null);
                 signatureFragment.hideButtons();
                 //just need to show captured signature on display for confirm
+                //TODO put toast snacbar to inform about signature confirm
                 break;
             case TERMINATING:
                 paymentFragment.showProgress(R.string.acceptsdk_progress__terminating, false);
@@ -210,7 +211,8 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
 
     @Override
     public void onPaymentSuccessful(Payment payment, String s) {
-        paymentFragment.successfulPayment();
+        runOnUiThread(() ->paymentFragment.successfulPayment());
+
     }
 
 
