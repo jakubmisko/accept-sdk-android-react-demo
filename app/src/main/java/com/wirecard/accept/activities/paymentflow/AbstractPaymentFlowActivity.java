@@ -41,9 +41,9 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     private String TAG = getClass().getSimpleName();
 
 
-    public PaymentFlowController getPaymentFlowController() {
-        return paymentFlowController;
-    }
+//    public PaymentFlowController getPaymentFlowController() {
+//        return paymentFlowController;
+//    }
 
     public void showPaymentFragment() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -117,6 +117,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     @Override
     protected void onResume() {
         super.onResume();
+        //fragment can be aceesed in on resume method
         paymentFragment.startPayment(paymentFlowController);
     }
 //    private void handlePaymentInterrupted() {

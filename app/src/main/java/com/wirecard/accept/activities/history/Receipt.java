@@ -16,6 +16,7 @@ import com.wirecard.accept.help.MyStringBuilder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.wirecard.accept.sdk.model.Payment;
 import de.wirecard.accept.sdk.model.PaymentItem;
@@ -37,7 +38,7 @@ public class Receipt {
         MyStringBuilder sb = new MyStringBuilder(new StringBuilder());
         sb.append("Receipt number ");
         sb.appendWithNextLine(ReceiptBuilder.getReceiptNumber(p));
-        sb.appendWithNextLine(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date(ReceiptBuilder.getTransactionDate(p))));
+        sb.appendWithNextLine(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss", Locale.getDefault()).format(new Date(ReceiptBuilder.getTransactionDate(p))));
         sb.append('\n');
         appendMerchantInfo(sb);
         sb.append('\n');

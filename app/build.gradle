@@ -108,7 +108,8 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
     compile 'info.android15.nucleus:nucleus:2.0.6'
     compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+//    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
 
 

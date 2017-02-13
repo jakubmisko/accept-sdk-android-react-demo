@@ -29,7 +29,7 @@ class MenuPresenter extends RxPresenter<MenuActivity> {
     private Context context;
     private PaymentFlowController.Device device;
     private AcceptThyronPaymentFlowController controller;
-    private final int DISCOVER_DEVICES = 0;
+    static final int DISCOVER_DEVICES = 0;
     private final int VERSION_CHECK = 1;
 
     @Override
@@ -112,8 +112,6 @@ class MenuPresenter extends RxPresenter<MenuActivity> {
                             menuActivity.presentSuccessfulConnect(b);
                             menuActivity.presentVersionCheckStarted();
                         });
-                //stop previous task to prevent restarting when process restarts
-                stop(DISCOVER_DEVICES);
                 //start new restartable task
                 start(VERSION_CHECK);
             }

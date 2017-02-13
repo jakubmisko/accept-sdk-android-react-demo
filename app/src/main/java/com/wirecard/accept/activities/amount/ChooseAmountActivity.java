@@ -94,7 +94,7 @@ public class ChooseAmountActivity extends BaseActivity<ChooseAmountPresenter> {
         Intent intent = new Intent(this, PaymentFlowActivity.class);
         intent.putExtra(Constants.AMOUNT, amount.getText());
         intent.putExtra(Constants.SEPA, sepa.isChecked());
-        intent.putExtra(Constants.PAYMENT_METHOD, paymentMethods.getPrompt());
+        intent.putExtra(Constants.PAYMENT_METHOD, paymentMethods.getSelectedItem().toString());
         startActivity(intent);
         finish();
     }

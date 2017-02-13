@@ -51,7 +51,8 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
         firmwareNumberAndUrl = AcceptSDK.getCurrentVersionOfSavedFirmwareInBackend();
         controller = AcceptSDK.getCNPController();
 
-        restartableLatestCache(DOWNLOAD_FW,
+        restartableLatestCache(
+                DOWNLOAD_FW,
                 () -> Observable.create(subscriber -> {
                     try {
                         TerminalInfo.downloadSaveAndExtractZipFile(context, firmwareNumberAndUrl.getFwUrl());
@@ -63,7 +64,7 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
                     subscriber.onCompleted();
                 }),
                 (firmwareUpdateActivity, t) -> {
-                    if(!firmwareUpdateActivity.wasDestroyed()) {
+                    if (!firmwareUpdateActivity.wasDestroyed()) {
                         handleFirmwareFileReady(firmwareUpdateActivity);
                     }
                 },
@@ -131,7 +132,7 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
             AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);
     }
 
-     void onConnectionEstablished(boolean restartRequired) {
+    void onConnectionEstablished(boolean restartRequired) {
         Log.d(TAG, "connection established");
         if (restartRequired && controller != null && !restarted) {
             terminalResetByApp = true;
@@ -141,7 +142,7 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
     }
 
 
-     private void disconnect() {
+    private void disconnect() {
         if (controller != null) {
             controller.disconnect();
             controller.setCNPListener(null);
@@ -149,7 +150,7 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
         }
     }
 
-     void cancelActualTask() {
+    void cancelActualTask() {
         stop(DOWNLOAD_FW);
     }
 }

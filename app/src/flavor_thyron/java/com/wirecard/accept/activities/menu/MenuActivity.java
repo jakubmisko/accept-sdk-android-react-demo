@@ -44,16 +44,20 @@ public class MenuActivity extends AbstractMenuActivity<MenuPresenter> {
 
     /* discover devices */
     public void presentDiscoveryError(DeviceDiscoverException excpetion) {
+        //stop previous task to prevent restarting when process restarts
+        getPresenter().stop(MenuPresenter.DISCOVER_DEVICES);
         //Check DiscoveryError enum (exception.getDiscoveryError) and handle all states
         Toast.makeText(this, getString(R.string.bt_enable), Toast.LENGTH_LONG).show();
     }
 
     public void presentDiscoveredDevices(List<PaymentFlowController.Device> devices) {
+        //stop previous task to prevent restarting when process restarts
+        getPresenter().stop(MenuPresenter.DISCOVER_DEVICES);
         if (devices == null || devices.isEmpty()) {
             Toast.makeText(this, getString(R.string.pair_terminal), Toast.LENGTH_LONG).show();
         } else {
             //>>> prepare data phase <<<
-            //this shows selector...bud this is usually done in your app... just demo app have to handle it before, because we need current used Device
+            //this shows selector...but this is usually done in your app... just demo app have to handle it before, because we need current used Device
             terminalChooser(devices);
         }
     }

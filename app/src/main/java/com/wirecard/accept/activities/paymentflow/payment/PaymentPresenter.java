@@ -15,6 +15,8 @@ import de.wirecard.accept.sdk.AcceptSDK;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import de.wirecard.accept.sdk.model.PaymentItem;
 import nucleus.presenter.RxPresenter;
+import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by super on 07.01.2017.
@@ -47,7 +49,7 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
         start(DISCOVER_DEVICES);
     }
 
-    String buildAmountWithCurrency(String amount){
+    String buildAmountWithCurrency(String amount) {
         final Currency currency = Currency.getInstance(AcceptSDK.getCurrency());
         return CurrencyUtils.format(amount, currency, Locale.getDefault());
     }
@@ -56,6 +58,8 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
      * second step: pay with discovered device
      *
      * @param device
+     * @param amount
+     * @param delegate
      */
     public void proceedToCardPayment(final PaymentFlowController.Device device, String amount, PaymentFlowController.PaymentFlowDelegate delegate) {
         AcceptSDK.startPayment();
@@ -69,7 +73,33 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
         controller.startPaymentFlow(device, amountUnits, Currency.getInstance(AcceptSDK.getCurrency()), delegate);
     }
 
-    public void payByCash(CharSequence amount) {
-        //todo cash payment
+    void payByCash(String amount) {
+        AcceptSDK.startPayment();
+        Float tax;
+        if (AcceptSDK.getPrefTaxArray().isEmpty())
+            tax = 0f;
+        else tax = AcceptSDK.getPrefTaxArray().get(0);
+        AcceptSDK.addPaymentItem(new PaymentItem(1, "", new BigDecimal(amount), tax));
+        AcceptSDK.setPaymentTransactionType(AcceptSDK.TransactionType.CASH_PAYMENT);
+        Single.create(subscriber -> {
+            AcceptSDK.postCashPayment((apiResult, payment) -> {
+                if (apiResult.isSuccess()) {
+                    subscriber.onSuccess(apiResult);
+                } else {
+                    subscriber.onError(new Throwable(apiResult.getMessage()));
+                }
+            });
+        })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+//                        result -> view().subscribe(paymentFragment -> {
+//                            paymentFragment.successfulPayment();
+//                        }),
+//                        error -> view().subscribe(paymentFragment -> {
+//                            paymentFragment.showProgress(error.getMessage(), false);
+//                        })
+                        result -> getView().successfulPayment(),
+                        error -> getView().showProgress(error.getMessage(), false)
+                );
     }
 }

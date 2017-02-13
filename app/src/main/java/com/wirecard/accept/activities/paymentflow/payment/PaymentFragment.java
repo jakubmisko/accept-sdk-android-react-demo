@@ -36,6 +36,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     TextView status;
     @BindView(R.id.amount)
     TextView amount;
+    private String amountValue;
 
     /**
      * create payment fragment instance with amount to be payed, payment method and sepa flag
@@ -63,7 +64,8 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
         }
         //set amount to text view with currency
         if (getArguments().containsKey(Constants.AMOUNT)) {
-            String amountWithCurrency = getPresenter().buildAmountWithCurrency(getArguments().getString(Constants.AMOUNT));
+            amountValue = getArguments().getString(Constants.AMOUNT);
+            String amountWithCurrency = getPresenter().buildAmountWithCurrency(amountValue);
             amount.setText(amountWithCurrency);
         }
     }
@@ -112,7 +114,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
         showProgress(messageRes == -1 ? "" : getString(messageRes), showProgress);
     }
 
-    private void showProgress(final String message, final boolean showProgress) {
+    void showProgress(final String message, final boolean showProgress) {
 //        runOnUiThreadIfNotDestroyed(() -> {
         progressBar.setVisibility(showProgress ? View.VISIBLE : View.INVISIBLE);
         status.setText(message);
@@ -147,7 +149,8 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
 
     public void startPayment(PaymentFlowController paymentFlowController) {
         if(getArguments().containsKey(Constants.PAYMENT_METHOD) && getArguments().getString(Constants.PAYMENT_METHOD).equals("Cash")){
-            getPresenter().payByCash(amount.getText());
+//            showProgress("Cash payment", false);
+            getPresenter().payByCash(amountValue);
         } else {
             proceedToDevicesDiscovery(paymentFlowController);
         }
