@@ -38,7 +38,6 @@ android {
         debug {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
 //            debuggable true
 //            zipAlignEnabled true
 //            jniDebuggable true
@@ -65,10 +64,10 @@ android {
     }
     productFlavors {
         flavor_bbpos {
-//            applicationId 'com.wirecard.accept.bbpos'
+            applicationId 'com.wirecard.accept.bbpos'
         }
         flavor_thyron {
-//            applicationId 'com.wirecard.accept.thyron'
+            applicationId 'com.wirecard.accept.thyron'
         }
     }
 
@@ -91,65 +90,58 @@ android {
 }
 
 dependencies {
+    //sdk
     compile(name: 'accept-sdk-android-acceptsdksource-release', ext: 'aar')
     flavor_thyronCompile(name: 'accept-sdk-android-thyronextension-release', ext: 'aar')
     flavor_bbposCompile(name: 'accept-sdk-android-bbposextension-release', ext: 'aar')
-// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient-android
-    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
-
-// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
-    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.5'
-
-
-    compile 'com.android.support:appcompat-v7:25.1.0'
 //    compile 'com.github.mposSVK:acceptSDK-Android:1.5.4'
 //    flavor_thyronCompile 'com.github.mposSVK:accept-android-extension-spire:1.5.3'
 //    flavor_bbposCompile 'com.github.mposSVK:accept-android-extension-bbpos:1.5.1'
+    //sdk dependencies
+    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
+    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    //sdk obfuscation
+    compile project(':proguard-rules')
+    //support
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    //picasso for image processing
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //rxjava
     compile 'io.reactivex:rxjava:1.2.6'
-    // And ProGuard rules for RxJava!
     compile 'com.artemzin.rxjava:proguard-rules:1.2.6.0'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava-async-util:0.21.0'
+    //    compile 'com.trello:rxlifecycle-components:1.0'
+    //icepick - save state
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
-//    compile 'com.trello:rxlifecycle-components:1.0'
+    //butterknife ui binding
     compile 'com.jakewharton:butterknife:8.1.0'
-    compile 'com.android.support:design:25.1.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    //nucleus mvp with rx
     compile 'info.android15.nucleus:nucleus:2.0.6'
-    compile 'com.android.support:support-v4:25.1.0'
     //proguard workaround
 //    compile 'com.squareup.okhttp3:okhttp:3.6.0'
-    // https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp
+//    https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp
 //    compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.1.0'
-// https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-csv
+//    https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-csv
 //    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.8.6'
 //    compile 'com.github.felHR85:UsbSerial:4.5'
-
 //    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
-
-
+    compile project(':uicomponents')
+    //tests
+    testCompile 'junit:junit:4.12'
     testCompile ('org.robolectric:robolectric:3.0') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
         exclude module: 'httpclient'
     }
-//    testCompile 'org.mockito:mockito-core:2.6.3'
-    testCompile 'junit:junit:4.12'
     //powermock
-//    androidTestCompile 'org.mockito:mockito-core:2.0.42-beta'
     testCompile 'org.powermock:powermock-api-mockito:1.6.6'
-    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.6'
-//    testCompile group: 'org.easymock', name: 'easymock', version: '3.4'
-//    testCompile group: 'org.powermock', name: 'powermock-api-easymock', version: '1.6.2'
-
     testCompile 'org.powermock:powermock-module-junit4:1.6.6'
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.6'
-//    testCompile group: 'org.powermock', name: 'powermock-core', version: '1.6.2'
-
-//    androidTestCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
-//essreso
-//    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.6'
 }

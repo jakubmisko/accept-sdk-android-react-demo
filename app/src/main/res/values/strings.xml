@@ -100,5 +100,7 @@
         <item>Card</item>
         <item>Cash</item>
     </string-array>
+    <string name="title_activity_tmp">Tmp</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

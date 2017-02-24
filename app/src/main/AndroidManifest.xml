@@ -41,6 +41,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.amount.ChooseAmountActivity">
         </activity>
+        <activity
+            android:name=".activities.Tmp"
+            android:label="@string/title_activity_tmp"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
