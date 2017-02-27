@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UI components</string>
+    <string name="lib_name">UI components</string>
     <string name="label_sign_in">Sign In</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>

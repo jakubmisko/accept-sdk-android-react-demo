@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="button_confirm" type="id">1001</item>
+    <item name="button_cancel" type="id">1002</item>
+    <item name="signature_view" type="id">1003</item>
+</resources>

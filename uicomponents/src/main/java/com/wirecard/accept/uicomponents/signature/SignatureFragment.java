@@ -2,6 +2,7 @@ package com.wirecard.accept.uicomponents.signature;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,12 +13,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wirecard.accept.uicomponents.Preconditions;
 import com.wirecard.accept.uicomponents.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
+import static com.wirecard.accept.uicomponents.Preconditions.*;
 
 /**
  * hadling of signature capture and confirmation
@@ -27,18 +30,43 @@ public class SignatureFragment extends Fragment implements SignatureComponent {
     private SignatureView signatureView;
     private Button confirm;
     private Button cancel;
+    private SignatureConfirmContract signatureConfirmContract;
+    private SignatureContract signatureContract;
+    public boolean signed = false;
 
-//    private ConfirmRequestWrapper confirmRequestWrapper;
-//
-//    public static SignatureFragment newInstance(ConfirmRequestWrapper confirmRequestWrapper) {
-//        SignatureFragment fragment = new SignatureFragment();
-//        fragment.setSignatureRequest(confirmRequestWrapper);
-//        return fragment;
-//    }
+    /**
+     * method to create fragment manually
+     *
+     * @param signatureConfirmContract callback for signature cofnirmation
+     * @param signatureContract        callback for signature capture
+     * @return signature fragment instance
+     */
+    public static SignatureFragment newInstance(SignatureContract signatureContract, SignatureConfirmContract signatureConfirmContract) {
+        SignatureFragment fragment = new SignatureFragment();
+        fragment.setSignatureContract(signatureContract);
+        fragment.setSignatureConfirmContract(signatureConfirmContract);
+        return fragment;
+    }
+
+    public void setSignatureConfirmContract(SignatureConfirmContract signatureConfirmContract) {
+        this.signatureConfirmContract = signatureConfirmContract;
+    }
+
+
+    public void setSignatureContract(SignatureContract signatureContract) {
+        this.signatureContract = signatureContract;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = buildLayout();
+        setListeners();
+        return view;
+    }
+
+    @NonNull
+    private View buildLayout() {
         //default layout
         LinearLayout root = new LinearLayout(getActivity());
         root.setOrientation(VERTICAL);
@@ -53,8 +81,11 @@ public class SignatureFragment extends Fragment implements SignatureComponent {
         confirm = new Button(getActivity());
         confirm.setText(R.string.button_confirm);
         confirm.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        cancel = new Button(getActivity());
         cancel.setText(R.string.button_cancel);
         cancel.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        buttons.addView(cancel);
+        buttons.addView(confirm);
 //       weight=1??
         //signature view
         signatureView = new SignatureView(getActivity());
@@ -64,38 +95,47 @@ public class SignatureFragment extends Fragment implements SignatureComponent {
         root.addView(label);
         root.addView(signatureView);
         root.addView(buttons);
+
+        //just for testing
+        confirm.setId(R.id.button_confirm);
+        cancel.setId(R.id.button_cancel);
+        signatureView.setId(R.id.signature_view);
         return root;
     }
 
-//    @OnClick(R.id.confirm_signature)
-//    public void confirmHandle() {
-//        //check if signature isn't blank
-//        if (signatureView.isSomethingDrawn()) {
-//            //when request requires data then compress bitmap to png byte array
-//            if(confirmRequestWrapper.requireSignature()) {
-//                confirmRequestWrapper.confirm(signatureView.compressSignatureBitmapToPNG());
-//            } else {
-//                //pass null when it's just signature confirmation
-//                confirmRequestWrapper.confirm(null);
-//            }
-//        } else {
-//            //TODO check for leakage, maybe unsubscribe needed
-//            RxDialog.create(getActivity(), R.string.acceptsdk_dialog_nothing_drawn_title, R.string.acceptsdk_dialog_nothing_drawn_message, android.R.string.ok).subscribe();
-//        }
-//    }
-//
-//    @OnClick(R.id.cancel_signature_confirmation)
-//    public void cancelHandle() {
-//        //when you try to cancel signature show confirmation dialog
-//        RxDialog.create(getActivity(), R.string.acceptsdk_dialog_cancel_signature_request_title, R.string.acceptsdk_dialog_cancel_signature_request_message,
-//                android.R.string.yes, android.R.string.no).filter(btn -> true).subscribe(click -> {
-//            confirmRequestWrapper.cancel();
-//        });
-//    }
-//
-//    public void setSignatureRequest(ConfirmRequestWrapper confirmRequestWrapper) {
-//        this.confirmRequestWrapper = confirmRequestWrapper;
-//    }
+    public void setListeners() {
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (signed) {
+                    nullCheck(signatureConfirmContract);
+                    signatureConfirmContract.onSignatureConfirm();
+                }
+                else {
+                    nullCheck(signatureContract);
+                    if (isSomethingDrawn()) {
+                        signatureContract.onSignatureFinished(getPNG());
+                        signed = true;
+                    }
+                    else {
+                        signatureContract.onNotSigned();
+                    }
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (signed) {
+                    signatureConfirmContract.onSignatureDecline();
+                }
+                else {
+                    signatureContract.onSignatureCancel();
+                }
+
+            }
+        });
+    }
 
     /**
      * hide button when it's signature confirmation, use terminal to confirm
@@ -107,11 +147,13 @@ public class SignatureFragment extends Fragment implements SignatureComponent {
 
     @Override
     public boolean isSomethingDrawn() {
+        nullCheck(signatureView);
         return signatureView.isSomethingDrawn();
     }
 
     @Override
     public byte[] getPNG() {
+        nullCheck(signatureView);
         return signatureView.compressSignatureBitmapToPNG();
     }
 }
