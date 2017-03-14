@@ -9,14 +9,15 @@
 #  Jackson
 -keepattributes *Annotation*,EnclosingMethod
 
--keepnames class org.codehaus.jackson.** { *; }
-
--dontwarn javax.xml.**
--dontwarn javax.xml.stream.events.**
+-keep class com.fasterxml.jackson.** { *; }
+-keepnames class org.fasterxml.jackson.** { *; }
 -dontwarn com.fasterxml.jackson.databind.**
 -dontwarn com.fasterxml.jackson.dataformat.**
 
--keep class com.fasterxml.jackson.** { *; }
+
+-dontwarn javax.xml.**
+-dontwarn javax.xml.stream.events.**
+
 
 # usb interface
 # maybe it will be missing

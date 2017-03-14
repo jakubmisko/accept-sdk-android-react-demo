@@ -2,7 +2,6 @@ package com.wirecard.accept.uicomponents.signature;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.support.annotation.IntRange;
 import android.view.MotionEvent;
 import android.widget.Button;
 
@@ -17,6 +16,9 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.util.FragmentTestUtil;
 
+import static com.wirecard.accept.uicomponents.signature.SignatureFragmentDialog.SignatureConfirmContract;
+import static com.wirecard.accept.uicomponents.signature.SignatureFragmentDialog.SignatureContract;
+import static com.wirecard.accept.uicomponents.signature.SignatureFragmentDialog.newInstance;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.any;
@@ -30,7 +32,7 @@ public class SignatureFragmentDialogTests {
 
     @Test(expected = NullPointerException.class)
     public void signatureConfirmCallbackNotSet() {
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(null, null);
+        SignatureFragmentDialog signatureFragment = newInstance(null, null);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         Button confirm = (Button) signatureFragment.getView().findViewById(R.id.button_confirm);
@@ -39,7 +41,7 @@ public class SignatureFragmentDialogTests {
 
     @Test(expected = NullPointerException.class)
     public void signatureCancelCallbackNotSet() {
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(null, null);
+        SignatureFragmentDialog signatureFragment = newInstance(null, null);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         Button cancel = (Button) signatureFragment.getView().findViewById(R.id.button_cancel);
@@ -49,7 +51,7 @@ public class SignatureFragmentDialogTests {
     @Test
     public void signatureNotFinished() {
         SignatureContract signatureContract = mock(SignatureContract.class);
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(signatureContract, null);
+        SignatureFragmentDialog signatureFragment = newInstance(signatureContract, null);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         Button confirm = (Button) signatureFragment.getView().findViewById(R.id.button_confirm);
@@ -60,7 +62,7 @@ public class SignatureFragmentDialogTests {
     @Test
     public void signatureFinished() {
         SignatureContract signatureContract = mock(SignatureContract.class);
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(signatureContract, null);
+        SignatureFragmentDialog signatureFragment = newInstance(signatureContract, null);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         SignatureView signatureView = (SignatureView) signatureFragment.getView().findViewById(R.id.signature_view);
@@ -76,7 +78,7 @@ public class SignatureFragmentDialogTests {
     public void signatureConfirmation() {
         SignatureContract signatureContract = mock(SignatureContract.class);
         SignatureConfirmContract signatureConfirmContract = mock(SignatureConfirmContract.class);
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(signatureContract, signatureConfirmContract);
+        SignatureFragmentDialog signatureFragment = newInstance(signatureContract, signatureConfirmContract);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         SignatureView signatureView = (SignatureView) signatureFragment.getView().findViewById(R.id.signature_view);
@@ -92,7 +94,7 @@ public class SignatureFragmentDialogTests {
     @Test
     public void signatureCancel() {
         SignatureContract signatureContract = mock(SignatureContract.class);
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(signatureContract, null);
+        SignatureFragmentDialog signatureFragment = newInstance(signatureContract, null);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         Button cancel = (Button) signatureFragment.getView().findViewById(R.id.button_cancel);
@@ -104,7 +106,7 @@ public class SignatureFragmentDialogTests {
     public void signatureDecline() {
         SignatureContract signatureContract = mock(SignatureContract.class);
         SignatureConfirmContract signatureConfirmContract = mock(SignatureConfirmContract.class);
-        SignatureFragmentDialog signatureFragment = SignatureFragmentDialog.newInstance(signatureContract, signatureConfirmContract);
+        SignatureFragmentDialog signatureFragment = newInstance(signatureContract, signatureConfirmContract);
         FragmentTestUtil.startFragment(signatureFragment);
         assertNotNull(signatureFragment);
         SignatureView signatureView = (SignatureView) signatureFragment.getView().findViewById(R.id.signature_view);
@@ -120,7 +122,7 @@ public class SignatureFragmentDialogTests {
 
     @Test
     public void showAsDialog() {
-        SignatureFragmentDialog signatureFragmentDialog = SignatureFragmentDialog.newInstance(null, null);
+        SignatureFragmentDialog signatureFragmentDialog = newInstance(null, null);
         Activity activity = Robolectric.buildActivity(Activity.class).create()
                 .start()
                 .resume()

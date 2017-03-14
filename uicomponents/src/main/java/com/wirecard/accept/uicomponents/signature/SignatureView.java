@@ -178,7 +178,7 @@ public class SignatureView extends View {
 
     public static class SVPathContainer implements Serializable {
         private static final long serialVersionUID = 1L;
-        protected ArrayList<SVPath> paths = new ArrayList<SVPath>();
+        protected ArrayList<SVPath> paths = new ArrayList<>();
 
         public ArrayList<SVPath> getPaths() {
             return paths;
@@ -237,7 +237,7 @@ public class SignatureView extends View {
 
     private static class SVPath extends Path implements Serializable {
         private static final long serialVersionUID = 1L;
-        private ArrayList<SVPathAction> actions = new ArrayList<SVPathAction>();
+        private ArrayList<SVPathAction> actions = new ArrayList<>();
 
         public boolean redraw() {
             boolean dirty = false;

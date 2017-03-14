@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.wirecard.accept.uicomponents.R;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
@@ -58,11 +57,16 @@ public class SignatureFragmentDialog extends DialogFragment implements Signature
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = buildLayout();
+//        View view = buildLayout();
+        View view = inflater.inflate(R.layout.fragment_signature, container, false);
+        confirm = (Button) view.findViewById(R.id.confirm);
+        cancel = (Button) view.findViewById(R.id.cancel);
+        signatureView = (SignatureView) view.findViewById(R.id.signature);
         setListeners();
         return view;
     }
 
+    @Deprecated
     @NonNull
     private View buildLayout() {
         //default layout
@@ -88,7 +92,7 @@ public class SignatureFragmentDialog extends DialogFragment implements Signature
         //signature view
         signatureView = new SignatureView(getActivity());
         int signatureHeight = root.getWidth() - label.getWidth() - buttons.getWidth();
-        signatureView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, signatureHeight));
+        signatureView.setLayoutParams(new ViewGroup.LayoutParams(1920, signatureHeight));
 
         root.addView(label);
         root.addView(signatureView);
@@ -153,5 +157,16 @@ public class SignatureFragmentDialog extends DialogFragment implements Signature
     public byte[] getPNG() {
         nullCheck(signatureView);
         return signatureView.compressSignatureBitmapToPNG();
+    }
+
+    public interface SignatureConfirmContract {
+        void onSignatureConfirm();
+        void onSignatureDecline();
+    }
+
+    public interface SignatureContract {
+        void onSignatureFinished(byte[] sinature);
+        void onNotSigned();
+        void onSignatureCancel();
     }
 }
