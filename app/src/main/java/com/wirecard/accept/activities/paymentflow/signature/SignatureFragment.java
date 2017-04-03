@@ -83,13 +83,13 @@ public class SignatureFragment extends BaseFragment {
      * hide button when it's signature confirmation, use terminal to confirm
      */
     public void hideButtons(){
-        confirm.setVisibility(View.GONE);
-        cancel.setVisibility(View.GONE);
+        confirm.setVisibility(View.INVISIBLE);
+        cancel.setVisibility(View.INVISIBLE);
     }
 
     public void showProgress(){
         if(barProgressDialog == null) {
-            barProgressDialog = new ProgressDialog(getActivity());
+            barProgressDialog = new ProgressDialog(getActivity(), R.style.AppTheme_Dark_Dialog);
             barProgressDialog.setTitle("Signature");
             barProgressDialog.setMessage("Uploading signature ...");
             barProgressDialog.setIndeterminate(true);
