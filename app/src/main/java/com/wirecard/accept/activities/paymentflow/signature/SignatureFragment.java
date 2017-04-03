@@ -1,11 +1,13 @@
 package com.wirecard.accept.activities.paymentflow.signature;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseFragment;
@@ -25,8 +27,11 @@ public class SignatureFragment extends BaseFragment {
     Button confirm;
     @BindView(R.id.cancel_signature_confirmation)
     Button cancel;
+    @BindView(R.id.label)
+    TextView label;
 
     private ConfirmRequestWrapper confirmRequestWrapper;
+    private ProgressDialog barProgressDialog;
 
     public static SignatureFragment newInstance(ConfirmRequestWrapper confirmRequestWrapper) {
         SignatureFragment fragment = new SignatureFragment();
@@ -54,6 +59,7 @@ public class SignatureFragment extends BaseFragment {
                 //pass null when it's just signature confirmation
                 confirmRequestWrapper.confirm(null);
             }
+            showProgress();
         } else {
             //TODO check for leakage, maybe unsubscribe needed
             RxDialog.create(getActivity(), R.string.acceptsdk_dialog_nothing_drawn_title, R.string.acceptsdk_dialog_nothing_drawn_message, android.R.string.ok).subscribe();
@@ -79,5 +85,25 @@ public class SignatureFragment extends BaseFragment {
     public void hideButtons(){
         confirm.setVisibility(View.GONE);
         cancel.setVisibility(View.GONE);
+    }
+
+    public void showProgress(){
+        if(barProgressDialog == null) {
+            barProgressDialog = new ProgressDialog(getActivity());
+            barProgressDialog.setTitle("Signature");
+            barProgressDialog.setMessage("Uploading signature ...");
+            barProgressDialog.setIndeterminate(true);
+        }
+        barProgressDialog.show();
+    }
+
+    public void dissmissProgress(){
+        if(barProgressDialog != null){
+            barProgressDialog.dismiss();
+        }
+    }
+
+    public void setLabel(String text){
+        label.setText(text);
     }
 }

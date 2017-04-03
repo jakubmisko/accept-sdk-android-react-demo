@@ -2,6 +2,7 @@ package com.wirecard.accept.activities.paymentflow.payment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.wirecard.accept.activities.base.BaseFragment;
 import com.wirecard.accept.exceptions.DeviceDiscoverException;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.DiscoverDevices;
+import com.wirecard.accept.help.StringUtils;
 import com.wirecard.accept.rx.dialog.RxDialog;
 
 import java.util.List;
@@ -30,6 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 @RequiresPresenter(PaymentPresenter.class)
 public class PaymentFragment extends BaseFragment<PaymentPresenter> {
+    private  final String TAG =getClass().getSimpleName() ;
     @BindView(R.id.progress)
     ProgressBar progressBar;
     @BindView(R.id.status)
@@ -87,7 +90,8 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(chosenDevice -> {
                                 showProgress(getString(R.string.acceptsdk_progress__connecting, devices.get(chosenDevice).displayName), true);
-                                getPresenter().proceedToCardPayment(devices.get(chosenDevice), amount.getText().toString(), (PaymentFlowController.PaymentFlowDelegate) getActivity());
+                                String amountStr = StringUtils.extractNumbers(amount.getText().toString());
+                                getPresenter().proceedToCardPayment(devices.get(chosenDevice), amountStr, (PaymentFlowController.PaymentFlowDelegate) getActivity());
                             },
                             cancel -> {
                                 getActivity().finish();
@@ -107,7 +111,11 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
         //TODO check leakage and use unsubscribe after
         RxDialog.create(getActivity(), getString(R.string.acceptsdk_dialog_payment_error_title), getString(R.string.acceptsdk_dialog_payment_error_message,
                 error + " - " + technicalDetails), getString(android.R.string.ok))
-                .subscribe(click -> getActivity().finish());
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        click -> getActivity().finish(),
+                        err-> Log.e(TAG, err.getMessage())
+                );
     }
 
     public void showProgress(final int messageRes, final boolean showProgress) {

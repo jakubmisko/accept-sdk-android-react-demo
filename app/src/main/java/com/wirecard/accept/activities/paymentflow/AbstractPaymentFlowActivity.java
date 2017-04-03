@@ -9,9 +9,11 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseActivity;
@@ -33,7 +35,7 @@ import rx.Subscription;
 public abstract class AbstractPaymentFlowActivity extends BaseActivity implements PaymentFlowController.PaymentFlowDelegate {
     //container for fragments
     @BindView(R.id.container)
-    View content;
+    View container;
     private Subscription receiver;
     protected PaymentFlowController paymentFlowController;
     private PaymentFragment paymentFragment;
@@ -186,8 +188,12 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
 //            paymentFragment.showProgress(R.string.acceptsdk_progress__confirm_signature, false);
                 showSignatureFragment(null);
                 signatureFragment.hideButtons();
+                signatureFragment.dissmissProgress();
+                //NPE :(
+                //Snackbar.make(container, "Confirm card holder's signature please.", Snackbar.LENGTH_SHORT).show();
+//                Toast.makeText(getApplication(), "Confirm card holder's signature please.", Toast.LENGTH_LONG).show();
+                signatureFragment.setLabel("Confirm card holder's signature please.");
                 //just need to show captured signature on display for confirm
-                //TODO put toast snacbar to inform about signature confirm
                 break;
             case TERMINATING:
                 paymentFragment.showProgress(R.string.acceptsdk_progress__terminating, false);
