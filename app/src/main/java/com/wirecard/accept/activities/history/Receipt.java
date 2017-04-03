@@ -27,7 +27,7 @@ import de.wirecard.accept.sdk.util.TaxUtils;
 /**
  * Created by super on 18.12.2016.
  */
-//TODO  strings to resources
+//TODO  strings to resources, redesign
 public class Receipt {
     /**
      * presentation of sdk receipt building and data getting

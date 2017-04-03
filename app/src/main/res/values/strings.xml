@@ -84,7 +84,7 @@
     <string name="reversed">Transaction was reversed</string>
     <string name="refunded">Transaction was refunded</string>
     <string name="reversed_or_refunded">Transaction was reversed or refunded</string>
-    <string name="not_reversed_refunded">Can not be reversed or refunded</string>
+    <string name="not_reversed_refunded">Transaction can not be reversed or refunded</string>
     <string name="payment_cancel_button">Cancel</string>
     <string name="payment_confirm_button">Confirm</string>
     <string name="menu_device_identity_error">Check device identity error code : %s</string>
@@ -102,5 +102,32 @@
     </string-array>
     <string name="title_activity_tmp">Tmp</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_login_material">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email or username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_empty_password">Password can\'t be empty</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_empty_username">Username can\'t be empty</string>
+    <string name="btn_login_label">Login</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="menu_item_trx_history">Transactions history</string>
+    <string name="menu_item_log_out">Log out</string>
+    <string name="menu_item_new_trx">New payment</string>
+    <string name="title_activity_menu">Menu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_item_fw_update">Firmware update</string>
+    <string name="menu_item_receipt">Receipt</string>
+    <string name="menu_item_reverse">Reverse</string>
+    <string name="menu_item_refund">Refund</string>
+    <string name="checkbox_sepa">SEPA</string>
+    <string name="title_activity_payment_status">PaymentStatus</string>
 
 </resources>

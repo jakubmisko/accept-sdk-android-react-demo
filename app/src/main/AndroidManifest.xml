@@ -11,11 +11,12 @@
         android:name=".Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/manifest_app_name"
-        android:supportsRtl="true">
+        android:label="Demo app"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.login.LoginActivity"
-            android:configChanges="screenSize|screenLayout"
+            android:name=".activities.login.LoginActivityMaterial"
+            android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,6 +28,7 @@
             android:name=".activities.menu.MenuActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait"/>
+        <!-- /> -->
         <activity
             android:name=".activities.login.WrongAcceptSettingsActivity"
             android:configChanges="screenSize|screenLayout|orientation"
@@ -35,17 +37,6 @@
             android:name=".activities.paymentflow.PaymentFlowActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activities.history.TransactionsHistoryActivity"
-            android:configChanges="screenSize|screenLayout|orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.amount.ChooseAmountActivity">
-        </activity>
-        <activity
-            android:name=".activities.Tmp"
-            android:label="@string/title_activity_tmp"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
     </application>
 
 </manifest>

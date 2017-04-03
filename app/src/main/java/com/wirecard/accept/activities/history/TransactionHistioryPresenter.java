@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jakub on 18.06.2016.
  */
-public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistoryActivity> {
+public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistoryFragment> {
     private String TAG = getClass().getSimpleName();
 
     private final int LOAD_PAYMENTS = 0;
@@ -51,9 +51,9 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
                         //handle data presentation on main ui thread
                         .observeOn(AndroidSchedulers.mainThread()),
                 //present data
-                TransactionsHistoryActivity::fillListView,
+                TransactionsHistoryFragment::fillListView,
                 //present error
-                TransactionsHistoryActivity::paymentsLoadingError
+                TransactionsHistoryFragment::paymentsLoadingError
 
         );
         //do reverse/refund request for transaction
@@ -75,7 +75,7 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
                 //present successful action
-                TransactionsHistoryActivity::notifyReverseRefund,
+                TransactionsHistoryFragment::notifyReverseRefund,
                 //present that action could not be performed
                 (transactionsHistoryActivity, throwable) -> transactionsHistoryActivity.unableToReverseRefund()
         );

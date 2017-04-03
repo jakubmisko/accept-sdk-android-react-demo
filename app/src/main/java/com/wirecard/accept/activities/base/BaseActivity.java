@@ -11,14 +11,14 @@ import com.wirecard.accept.rx.receivers.RxBroadcastReceiver;
 
 import icepick.Icepick;
 import nucleus.presenter.Presenter;
-import nucleus.view.NucleusActivity;
+import nucleus.view.NucleusActionBarActivity;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
 
  */
-public abstract class BaseActivity<P extends Presenter> extends NucleusActivity<P> {
+public abstract class BaseActivity<P extends Presenter> extends NucleusActionBarActivity<P> {
     final String TAG = BaseActivity.class.getSimpleName();
     public final static int TYPE_LOGOUT = 1;
     private Subscription receiver;

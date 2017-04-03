@@ -1,8 +1,8 @@
 package com.wirecard.accept.activities.menu;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
@@ -14,8 +14,6 @@ import com.wirecard.accept.rx.dialog.RxDialog;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.wirecard.accept.extension.thyron.ThyronBluetoothDevice;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import nucleus.factory.RequiresPresenter;
@@ -31,15 +29,26 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MenuActivity extends AbstractMenuActivity<MenuPresenter> {
     private final String TAG = getClass().getSimpleName();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        ButterKnife.bind(this);
+//    }
 
-    @OnClick(R.id.firmwareUpdate)
+//    @OnClick(R.id.firmwareUpdate)
     public void firmwareUpdate() {
         getPresenter().discoverDevices(this);
+    }
+
+
+    @Override
+    protected boolean handleMenuItemClick(MenuItem menuItem) {
+        if(!super.handleMenuItemClick(menuItem) && menuItem.getItemId() == R.id.fw_update){
+//            Fragment fragment = new FirmwareUpdateActivity();
+//            return recplaceFragment(fragment);
+            firmwareUpdate();
+        }
+        return false;
     }
 
     /* discover devices */

@@ -1,86 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_choose_amount"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wirecard.accept.activities.amount.ChooseAmountActivity">
-
+    android:orientation="vertical"
+    tools:context="com.wirecard.accept.activities.amount.ChooseAmountFragment">
+<!-- todo app compat buttons? -->
     <TableLayout
-        android:id="@+id/tableLayout1"
+        android:id="@+id/numpad"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <TableRow
-            android:id="@+id/r6"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:padding="5dip">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Please type amount of your payment"
-                android:textSize="20sp"
-                android:layout_span="3"/>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/r5"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:padding="5dip">
-
-            <TextView
-                android:id="@+id/amount"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_span="2"
-                android:maxLength="16"
-                android:text="Amount"
-                android:textSize="20sp"/>
-
-            <Button
-                android:id="@+id/pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pay"
-                android:textSize="30sp"/>
-
-        </TableRow>
-        <TableRow
-            android:id="@+id/options"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:padding="5dip">
-
-            <CheckBox
-                android:text="SEPA"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/sepa"/>
-            <!-- just fill empty cell -->
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-            </View>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/methods"
-                />
-        </TableRow>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_grey">
 
         <TableRow
             android:id="@+id/r4"
@@ -91,24 +24,32 @@
 
             <Button
                 android:id="@+id/seven"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="7"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"/>
 
             <Button
                 android:id="@+id/eight"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="8"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"/>
 
             <Button
                 android:id="@+id/nine"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="9"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"/>
         </TableRow>
 
         <TableRow
@@ -120,24 +61,32 @@
 
             <Button
                 android:id="@+id/four"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"/>
 
             <Button
                 android:id="@+id/five"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"/>
 
             <Button
                 android:id="@+id/six"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="6"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"/>
         </TableRow>
 
         <TableRow
@@ -149,24 +98,32 @@
 
             <Button
                 android:id="@+id/one"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"/>
 
             <Button
                 android:id="@+id/two"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"/>
 
             <Button
                 android:id="@+id/three"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"/>
         </TableRow>
 
         <TableRow
@@ -174,28 +131,119 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="5dip">
+            android:layout_marginBottom="8dp">
 
-            <Button
-                android:id="@+id/divider"
+            <ImageButton
+                android:id="@+id/clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="."
-                android:textSize="30sp"/>
+                android:src="@drawable/ic_clear_black_24dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:theme="@style/MyButton"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"/>
 
             <Button
                 android:id="@+id/zero"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:theme="@style/MyButton"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/backspace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="C"
-                android:textSize="30sp"/>
+                android:src="@drawable/ic_backspace_black_24dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:theme="@style/MyButton"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"/>
         </TableRow>
     </TableLayout>
-</LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/amountRow"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:text="Please type amount of your payment"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"/>
+
+    <RelativeLayout
+        android:id="@+id/amountRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/options"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <Button
+            android:id="@+id/pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Pay"
+            android:textSize="30sp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:maxLength="1"
+            android:layout_centerVertical="true"
+            android:paddingRight="8dp"
+            android:layout_toLeftOf="@id/pay"/>
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:layout_span="2"
+            android:maxLength="16"
+            android:text="Amount"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/currency"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/options"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_above="@id/numpad"
+        android:background="@color/darker_grey">
+
+        <CheckBox
+            android:id="@+id/sepa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkbox_sepa"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/methods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+    </RelativeLayout>
+</RelativeLayout>

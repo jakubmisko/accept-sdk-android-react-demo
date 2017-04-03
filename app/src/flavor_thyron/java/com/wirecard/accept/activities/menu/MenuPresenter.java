@@ -25,7 +25,7 @@ import static android.content.ContentValues.TAG;
  * Presentation logic of menu activity
  */
 //TODO rewrite with composition
-class MenuPresenter extends RxPresenter<MenuActivity> {
+public class MenuPresenter extends RxPresenter<MenuActivity> {
     private Context context;
     private PaymentFlowController.Device device;
     private AcceptThyronPaymentFlowController controller;

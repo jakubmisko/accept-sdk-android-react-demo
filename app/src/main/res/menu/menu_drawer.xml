@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/new_trx"
+            android:title="@string/menu_item_new_trx"
+            android:icon="@drawable/ic_card_membership_black_24dp"/>
+        <item
+            android:id="@+id/trx_history"
+            android:title="@string/menu_item_trx_history"
+            android:icon="@drawable/ic_list_black_24dp"/>
+        <item
+            android:id="@+id/fw_update"
+            android:title="@string/menu_item_fw_update"
+            android:icon="@drawable/ic_get_app_black_24dp"/>
+        <item
+            android:id="@+id/logout"
+            android:title="@string/menu_item_log_out"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"/>
+    </group>
+
+    <item android:title="Other">
+        <menu>
+            <item
+                android:id="@+id/wd"
+                android:title="Wirecard Technologies GmBH" />
+        </menu>
+    </item>
+
+</menu>

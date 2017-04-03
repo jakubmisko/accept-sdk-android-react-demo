@@ -3,14 +3,14 @@ package com.wirecard.accept.activities.base;
 import android.os.Bundle;
 
 import icepick.Icepick;
-import nucleus.presenter.RxPresenter;
+import nucleus.presenter.Presenter;
 import nucleus.view.NucleusFragment;
 
 /**
  * Created by super on 18.12.2016.
  */
 
-public class BaseFragment<P extends RxPresenter> extends NucleusFragment<P> {
+public class BaseFragment<P extends Presenter> extends NucleusFragment<P> {
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);

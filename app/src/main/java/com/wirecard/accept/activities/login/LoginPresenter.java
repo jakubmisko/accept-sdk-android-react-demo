@@ -10,7 +10,7 @@ import rx.Observable;
 /**
  * Created by super on 28.11.2016.
  */
-public class LoginPresenter extends RxPresenter<LoginActivity> {
+public class LoginPresenter extends RxPresenter<LoginActivityMaterial/*LoginActivity*/> {
     private String TAG = getClass().getSimpleName();
     private final int LOGIN = 0;
     private String username, pass;

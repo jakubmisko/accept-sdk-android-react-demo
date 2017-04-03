@@ -20,13 +20,13 @@ import com.wirecard.accept.rx.dialog.RxDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import nucleus.factory.RequiresPresenter;
+import icepick.State;
 import rx.Subscription;
 
 /**
  * Created by jakub.misko on 1. 4. 2016.
  */
-@RequiresPresenter(LoginPresenter.class)
+//@RequiresPresenter(LoginPresenter.class)
 public class LoginActivity extends BaseActivity<LoginPresenter> {
     private final String TAG = getClass().getSimpleName();
     @BindView(R.id.username)
@@ -39,6 +39,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
     TextView backend;
     @BindView(R.id.version)
     TextView version;
+    @State
+    String savedName;
+    @State
+    String savedPass;
 
     private Subscription alertDialog;
 
@@ -72,6 +76,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
      */
     @OnClick(R.id.login)
     public void handleLogin() {
+
         if (TextUtils.isEmpty(username.getText()) && TextUtils.isEmpty(password.getText())) {
             presentFormError(getString(R.string.login_empty_pass_and_name));
         } else if (TextUtils.isEmpty(username.getText())) {
@@ -80,8 +85,12 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
             presentFormError(getString(R.string.login_empty_pass));
         } else {
             enableForm(false);
+            showProgress();
             getPresenter().evaluateLogin(username.getText().toString(), password.getText().toString());
         }
+    }
+
+    private void showProgress() {
     }
 
     /**

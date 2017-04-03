@@ -83,7 +83,7 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
             firmwareUpdateActivity.showEnableBluetooth();
         } else {
             firmwareUpdateActivity.showFirmwareScreen_LoadingVersionInfo();
-            context = firmwareUpdateActivity.getApplicationContext();
+            context = firmwareUpdateActivity.getActivity();
             start(DOWNLOAD_FW);
         }
     }

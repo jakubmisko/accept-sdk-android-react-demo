@@ -18,10 +18,10 @@ import de.wirecard.accept.sdk.model.Payment;
  * Created by super on 18.12.2016.
  */
 
-public class PaymentAdapter extends ArrayAdapter<Payment> {
+public class PaymentArrayAdapter extends ArrayAdapter<Payment> {
     private Context context;
 
-    PaymentAdapter(Context context) {
+    PaymentArrayAdapter(Context context) {
         super(context, R.layout.row_payment_history);
         this.context = context;
     }

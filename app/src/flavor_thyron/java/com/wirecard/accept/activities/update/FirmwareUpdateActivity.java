@@ -1,13 +1,17 @@
 package com.wirecard.accept.activities.update;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.base.BaseActivity;
+import com.wirecard.accept.activities.base.BaseFragment;
 import com.wirecard.accept.help.Constants;
 
 import butterknife.BindView;
@@ -20,12 +24,15 @@ import de.wirecard.accept.sdk.cnp.observer.ProcessState;
 import de.wirecard.accept.sdk.cnp.observer.TerminalEvent;
 import nucleus.factory.RequiresPresenter;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Firmware update activity
  */
-
+//TODO move logic to presenter?
 @RequiresPresenter(FirmwareUpdatePresenter.class)
-public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter> implements CNPListener {
+public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter> implements CNPListener {
     private static String TAG = FirmwareUpdateActivity.class.getSimpleName();
     @BindView(R.id.textViewMessage)
     TextView message_text;
@@ -35,14 +42,16 @@ public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter
     Button cancelButton;
     private boolean isDestroyed = false;
 
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_firmware_update);
-        ButterKnife.bind(this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_firmware_update, container, false);
+        ButterKnife.bind(view);
         //store choosen device
-        getPresenter().setCurrentDev(getIntent().getExtras().getParcelable(Constants.EXTRA_SELECTED_DEVICE));
-        setResult(RESULT_CANCELED);
+        getPresenter().setCurrentDev(getActivity().getIntent().getExtras().getParcelable(Constants.EXTRA_SELECTED_DEVICE));
+        getActivity().setResult(RESULT_CANCELED);
+        return view;
     }
 
     @OnClick(R.id.button)
@@ -50,7 +59,7 @@ public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter
         isDestroyed = true;
         //result is set
         getPresenter().cancelActualTask();
-        finish();
+        getActivity().finish();
     }
 
     public void showFirmwareScreen_LoadingVersionInfo() {
@@ -78,23 +87,23 @@ public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter
         message_text.setText(R.string.bt_pairing_connection_lost);
     }
 
-
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         // to the bottom?
         super.onDestroy();
         Log.d(TAG, "disconnecting from cnp controller");
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        finish();
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getActivity().finish();
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setResult(RESULT_CANCELED);
-        getPresenter().cancelActualTask();
-    }
+
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        getActivity().setResult(RESULT_CANCELED);
+//        getPresenter().cancelActualTask();
+//    }
 
     public boolean wasDestroyed() {
         return isDestroyed;
@@ -158,7 +167,7 @@ public class FirmwareUpdateActivity extends BaseActivity<FirmwareUpdatePresenter
                 message_text.setText(R.string.fw_install_success);
                 getPresenter().saveCurrentVersionOnBe();
                 cancelButton.setText(R.string.wl_general_done);
-                setResult(RESULT_OK);
+                getActivity().setResult(RESULT_OK);
                 break;
             case FIRMWARE_UPDATE_STARTED:
                 progress_text.setText(R.string.processing);

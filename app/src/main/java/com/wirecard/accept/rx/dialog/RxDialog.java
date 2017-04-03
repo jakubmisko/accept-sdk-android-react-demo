@@ -1,9 +1,11 @@
 package com.wirecard.accept.rx.dialog;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+
+import com.wirecard.accept.R;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -18,7 +20,7 @@ public class RxDialog {
     @NonNull
     public static Observable<Boolean> create(Context context, int title, int message, View customContent, int positiveBtn, int negativeBtn){
         return Observable.create((Subscriber<? super Boolean> subscriber) -> {
-            final AlertDialog ad = new AlertDialog.Builder(context)
+            final AlertDialog ad = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                     .setTitle(title)
                     .setMessage(message)
                     .setView(customContent)
@@ -41,7 +43,7 @@ public class RxDialog {
     @NonNull
     public static Observable<Boolean> create(Context context, int title, int message, int positiveBtn, int negativeBtn) {
         return Observable.create((Subscriber<? super Boolean> subscriber) -> {
-            final AlertDialog ad = new AlertDialog.Builder(context)
+            final AlertDialog ad = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                     .setTitle(title)
                     .setMessage(message)
                     .setCancelable(false)
@@ -63,7 +65,7 @@ public class RxDialog {
     @NonNull
     public static Observable<Boolean> create(Context context, String title, String message, int positiveBtn, int negativeBtn) {
         return Observable.create((Subscriber<? super Boolean> subscriber) -> {
-            final AlertDialog ad = new AlertDialog.Builder(context)
+            final AlertDialog ad = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                     .setTitle(title)
                     .setMessage(message)
                     .setCancelable(false)
@@ -93,7 +95,7 @@ public class RxDialog {
     @NonNull
     public static Observable<Integer> create(Context context, int title, int negativeBtn, CharSequence[] items){
         return Observable.create((Subscriber<? super Integer> subscriber) -> {
-            final AlertDialog ad = new AlertDialog.Builder(context)
+            final AlertDialog ad = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                     .setTitle(title)
                     .setCancelable(false)
                     .setSingleChoiceItems(items, -1, (dialogInterface, i) -> {
@@ -116,7 +118,7 @@ public class RxDialog {
     @NonNull
     public static Observable<Void> create(Context context, String title, String message, String possitiveBtn){
         return Observable.create((Subscriber<? super Void> subscriber) -> {
-            final AlertDialog ad = new AlertDialog.Builder(context)
+            final AlertDialog ad = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                     .setTitle(title)
                     .setMessage(message)
                     .setCancelable(false)

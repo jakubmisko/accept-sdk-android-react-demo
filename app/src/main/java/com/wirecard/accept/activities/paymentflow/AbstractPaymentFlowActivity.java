@@ -193,7 +193,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
                 paymentFragment.showProgress(R.string.acceptsdk_progress__terminating, false);
                 break;
             case TRANSACTION_UPDATE:
-                //toto dismiss confirm dialog if present
+                //todo dismiss confirm dialog if present
                 paymentFragment.showProgress(R.string.acceptsdk_progress__tc_update, true);
                 break;
             case WRONG_SWIPE:

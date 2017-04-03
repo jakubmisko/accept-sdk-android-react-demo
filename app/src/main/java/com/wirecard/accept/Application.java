@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.wirecard.accept.activities.login.LoginActivity;
+import com.wirecard.accept.activities.login.LoginActivityMaterial;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.rx.receivers.RxBroadcastReceiver;
 
@@ -63,7 +63,7 @@ public class Application extends android.app.Application {
 
     public void sendLogoutIntentAndGoLogin() {
         AcceptSDK.logout();
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivityMaterial.class);
         intent.putExtra(Constants.LOGOUT, true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
