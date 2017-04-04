@@ -6,10 +6,10 @@ package com.wirecard.accept.activities.amount;
 //@RunWith(RobolectricTestRunner.class)
 //@Config(constants = CustomConfig.class, sdk = 25, application = TestApplication.class)
 public class ChooseAmountPresenterTests {
-//    FragmentController<ChooseAmountFragment> fragmentController;// = Robolectric.buildFragment(ChooseAmountFragment.class);
+//    FragmentController<NumpadFragment> fragmentController;// = Robolectric.buildFragment(NumpadFragment.class);
 //    @Test
 //    public void formatAmount() {
-//        FragmentController<ChooseAmountFragment> fragmentController = Robolectric.buildFragment(ChooseAmountFragment.class);
+//        FragmentController<NumpadFragment> fragmentController = Robolectric.buildFragment(NumpadFragment.class);
 //        fragmentController.create().resume().visible();
 //        TextView amount = (TextView) fragmentController.get().getView().findViewById(R.id.amount);
 //        Button one = (Button) fragmentController.get().getView().findViewById(R.id.one);

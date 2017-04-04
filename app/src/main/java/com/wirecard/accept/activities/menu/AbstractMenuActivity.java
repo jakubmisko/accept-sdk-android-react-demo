@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
-import com.wirecard.accept.activities.amount.ChooseAmountFragment;
+import com.wirecard.accept.activities.amount.NumpadFragment;
 import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.history.TransactionsHistoryFragment;
 import com.wirecard.accept.activities.login.LoginActivityMaterial;
@@ -48,8 +48,8 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
         configureToolbar();
         //set menu items listeners
         navigationView.setNavigationItemSelectedListener(this::handleMenuItemClick);
-        ChooseAmountFragment chooseAmountFragment = new ChooseAmountFragment();
-        recplaceFragment(chooseAmountFragment);
+        NumpadFragment numpadFragment = new NumpadFragment();
+        recplaceFragment(numpadFragment);
 //        firstName.setText("Jakub");
 //        lastName.setText("Misko");
 
@@ -71,7 +71,7 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
         switch (menuItem.getItemId()) {
             case R.id.new_trx:
                 toolbar.setTitle("New payment");
-                fragment = new ChooseAmountFragment();
+                fragment = new NumpadFragment();
                 break;
             case R.id.trx_history:
                 toolbar.setTitle("Transactions history");

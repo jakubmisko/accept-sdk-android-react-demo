@@ -23,8 +23,8 @@ import butterknife.OnClick;
 import nucleus.factory.RequiresPresenter;
 
 //TODO start from floating point part, refactor name
-@RequiresPresenter(ChooseAmountPresenter.class)
-public class ChooseAmountFragment extends BaseFragment<ChooseAmountPresenter> implements View.OnClickListener {
+@RequiresPresenter(NumpadPresenter.class)
+public class NumpadFragment extends BaseFragment<NumpadPresenter> implements View.OnClickListener {
     @BindView(R.id.amount)
     TextView amount;
     @BindView(R.id.currency)
