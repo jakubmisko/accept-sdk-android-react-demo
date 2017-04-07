@@ -81,11 +81,11 @@ public class PaymentRecyclerAdapter extends RecyclerView.Adapter<PaymentRecycler
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.cardHolder)
+        @BindView(R.id.card_holder)
         TextView title;
-        @BindView(R.id.paymentAmount)
+        @BindView(R.id.payment_amount)
         TextView amount;
-        @BindView(R.id.paymentStatus)
+        @BindView(R.id.payment_status)
         ImageView status;
         @BindView(R.id.actions)
         ImageButton imageButton;

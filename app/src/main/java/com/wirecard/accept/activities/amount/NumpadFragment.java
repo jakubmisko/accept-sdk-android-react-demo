@@ -74,13 +74,14 @@ public class NumpadFragment extends BaseFragment<NumpadPresenter> implements Vie
         intent.putExtra(Constants.SEPA, sepa.isChecked());
         intent.putExtra(Constants.PAYMENT_METHOD, paymentMethods.getSelectedItem().toString());
         startActivity(intent);
+        setAmount("0.00");
 //        getActivity().finish();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_choose_amount, container, false);
+        View view = inflater.inflate(R.layout.fragment_numpad, container, false);
         ButterKnife.bind(this, view);
         attachListeners();
         // Create an ArrayAdapter using the string array and a default spinner layout

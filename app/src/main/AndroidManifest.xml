@@ -28,11 +28,11 @@
             android:name=".activities.menu.MenuActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait"/>
-        <!-- /> -->
         <activity
             android:name=".activities.login.WrongAcceptSettingsActivity"
             android:configChanges="screenSize|screenLayout|orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".activities.paymentflow.PaymentFlowActivity"
             android:configChanges="screenSize|screenLayout|orientation"

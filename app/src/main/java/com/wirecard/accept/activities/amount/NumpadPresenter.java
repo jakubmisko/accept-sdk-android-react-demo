@@ -14,11 +14,9 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
     private final String ZERO = "0";
     private final String BACKSPACE = "<";
     private final String CLEAR = "x";
-    //    private String actualAmount = ZERO;
     private char DELIMETER = '.';
     private int maxDigits = 0;
     private int decimals = 2;
-    //    private Observable<String> amounts;
     private PublishSubject<String> events;
 
     @Override
@@ -63,6 +61,7 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
 
     /**
      * format entered digits into floating point format
+     *
      * @param amount to be formated
      * @return amount in correct format
      */
@@ -88,6 +87,14 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
     }
 
     /**
+     * produce clear amount field event
+     */
+
+    void clearAmount() {
+        events.onNext(CLEAR);
+    }
+
+    /**
      * handle number key press from activity
      *
      * @param value 0-9 digits
@@ -100,6 +107,7 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
 
     /**
      * set delimeter character
+     *
      * @param delimeter displayed in number
      */
     void setDivider(char delimeter) {
@@ -108,6 +116,7 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
 
     /**
      * set allowed max decimals for amount formating
+     *
      * @param decimals max allowed decimals
      */
     public void setDecimals(int decimals) {
@@ -133,11 +142,5 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
         return new BigDecimal(amount.substring(0, amount.length() - 2));
     }
 
-    /**
-     * produce clear amount field event
-     */
 
-    public void clearAmount() {
-        events.onNext(CLEAR);
-    }
 }

@@ -13,7 +13,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Something is wrong.\nApplication is not in runnable state"
+        android:text="@string/label_wrong_config"
         android:textSize="18sp"
         />
 
@@ -21,10 +21,18 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="10dp"
         tools:text="Some error message"
-        />
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="!"
+        android:textSize="130sp"/>
 
 
 </RelativeLayout>

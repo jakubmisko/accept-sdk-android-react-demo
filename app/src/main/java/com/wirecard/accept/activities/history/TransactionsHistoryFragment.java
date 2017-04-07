@@ -49,7 +49,7 @@ public class TransactionsHistoryFragment extends BaseFragment<TransactionHistior
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_history_material, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, view);
         showProgress("Loading payments...");
         getPresenter().loadPayments(1, 100, null, null);
@@ -61,7 +61,7 @@ public class TransactionsHistoryFragment extends BaseFragment<TransactionHistior
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 ////        setContentView(R.layout.activity_history);
-//        setContentView(R.layout.activity_history_material);
+//        setContentView(R.layout.fragment_history);
 //        ButterKnife.bind(this);
 //        showProgress("Loading payments...");
 //        getPresenter().loadPayments(1, 100, null, null);

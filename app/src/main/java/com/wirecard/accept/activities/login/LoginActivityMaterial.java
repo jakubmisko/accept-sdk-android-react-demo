@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.wirecard.accept.Application;
 import com.wirecard.accept.BuildConfig;
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.menu.MenuActivity;
+import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.RxHelper;
 import com.wirecard.accept.rx.dialog.RxDialog;
 
@@ -49,9 +51,8 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_material);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//username.setTextColor(getResources().getColor(R.color.colorPrimary, R.style.AppTheme_NoActionBar);
         backend.setText(BuildConfig.apiPath);
         //TODO resource
         String versionStr = String.format("Version: %s(%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
@@ -138,7 +139,32 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
     @Override
     protected void onPause() {
         super.onPause();
+        checkBackendConfig();
+        checkLoginToken();
         RxHelper.unsubscribe(alertDialog);
+    }
+
+    /**
+     * inform that there's corrupted backend configuration
+     */
+    private void checkBackendConfig() {
+        String wrongSdkConfig = ((Application) getApplication()).getErrorMessage();
+        if (!getPresenter().isBEConfigOk(wrongSdkConfig)) {
+            Intent intent = new Intent(this, WrongAcceptSettingsActivity.class);
+            intent.putExtra(Constants.TEXT, wrongSdkConfig);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    /**
+     * if user left application and return back in
+     */
+    void checkLoginToken() {
+        if (!getPresenter().isLoginTokenExpired()) {
+            startActivity(new Intent(this, MenuActivity.class));
+            finish();
+        }
     }
 }
 

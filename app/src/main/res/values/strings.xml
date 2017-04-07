@@ -12,7 +12,7 @@
     <string name="acceptsdk_payment_activity_cancel_button">Cancel</string>
     <string name="acceptsdk_payment_activity_retry_button">Retry</string>
     <string name="acceptsdk_payment_activity_confirm_signature_button">Confirm</string>
-    <string name="payment_sign_in_label">Sign In</string>
+    <string name="payment_sign_in_label">Please sign in</string>
 
     <string name="acceptsdk_dialog_payment_error_title">Transaction error</string>
     <string name="acceptsdk_dialog_payment_error_message">Transaction rejected ( %s ).</string>
@@ -129,5 +129,9 @@
     <string name="menu_item_refund">Refund</string>
     <string name="checkbox_sepa">SEPA</string>
     <string name="title_activity_payment_status">PaymentStatus</string>
+    <string name="label_wrong_config">Something is wrong. Application is not in runnable state</string>
+    <string name="switcher_contactless">Contactless</string>
+    <string name="switcher_usb">USB interface</string>
+    <string name="menu_label_settings">Settings</string>
 
 </resources>
