@@ -9,11 +9,11 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseActivity;
@@ -25,6 +25,7 @@ import com.wirecard.accept.help.RxHelper;
 import com.wirecard.accept.rx.receivers.RxBroadcastReceiver;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import de.wirecard.accept.sdk.model.Payment;
 import rx.Subscription;
@@ -36,6 +37,8 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     //container for fragments
     @BindView(R.id.container)
     View container;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private Subscription receiver;
     protected PaymentFlowController paymentFlowController;
     private PaymentFragment paymentFragment;
@@ -48,6 +51,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
 //    }
 
     public void showPaymentFragment() {
+        getSupportActionBar().setTitle("Payment");
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (paymentFragment != null && paymentFragment.isAdded()) {
             transaction.show(paymentFragment);
@@ -63,6 +67,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     }
 
     public void showSignatureFragment(ConfirmRequestWrapper wrapper) {
+        getSupportActionBar().setTitle("Signature");
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (signatureFragment != null && signatureFragment.isAdded()) {
             transaction.show(signatureFragment);
@@ -81,6 +86,8 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_activity);
+        ButterKnife.bind(this);
+        configureToolbar();
         paymentFlowController = createNewController();
         if (paymentFlowController == null)
             throw new IllegalArgumentException("You have to implement createNewController()");
@@ -93,6 +100,13 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
 //        isDestroyed = false;
     }
 
+    private void configureToolbar() {
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setElevation(4f);
+    }
 
     abstract PaymentFlowController createNewController();
 

@@ -125,7 +125,8 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
             @Override
             public void onError(String s) {
                 view().observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(menuActivity -> menuActivity.presentError(s));
+                        .subscribe(menuActivity -> menuActivity.presentError(s),
+                                err -> Log.e(TAG, "onError: ", err));
             }
         });
     }

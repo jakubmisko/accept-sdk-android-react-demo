@@ -8,7 +8,7 @@ public class RxHelper {
         Observable.from(s).subscribe(RxHelper::unsubscribe);
     }
     public static void unsubscribe(Subscription s){
-        if (s != null && s.isUnsubscribed()) {
+        if (s != null && !s.isUnsubscribed()) {
             s.unsubscribe();
         }
     }

@@ -1,6 +1,7 @@
 package com.wirecard.accept.activities.update;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,23 +31,29 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Firmware update activity
  */
-//TODO move logic to presenter?
 @RequiresPresenter(FirmwareUpdatePresenter.class)
-public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter> implements CNPListener {
-    private static String TAG = FirmwareUpdateActivity.class.getSimpleName();
-    @BindView(R.id.textViewMessage)
+public class FirmwareUpdateFragment extends BaseFragment<FirmwareUpdatePresenter> implements CNPListener {
+    private static String TAG = FirmwareUpdateFragment.class.getSimpleName();
+    @BindView(R.id.message)
     TextView message_text;
-    @BindView(R.id.textViewProgress)
+    @BindView(R.id.progress)
     TextView progress_text;
     @BindView(R.id.button)
     Button cancelButton;
-    private boolean isDestroyed = false;
 
+    public static FirmwareUpdateFragment newInstance(Parcelable device) {
 
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.EXTRA_SELECTED_DEVICE, device);
+
+        FirmwareUpdateFragment fragment = new FirmwareUpdateFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_firmware_update, container, false);
+        View view = inflater.inflate(R.layout.fragment_firmware_update, container, false);
         ButterKnife.bind(view);
         //store choosen device
         getPresenter().setCurrentDev(getActivity().getIntent().getExtras().getParcelable(Constants.EXTRA_SELECTED_DEVICE));
@@ -56,35 +63,47 @@ public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter
 
     @OnClick(R.id.button)
     public void cancel() {
-        isDestroyed = true;
         //result is set
         getPresenter().cancelActualTask();
         getActivity().finish();
     }
 
     public void showFirmwareScreen_LoadingVersionInfo() {
-        progress_text.setText(R.string.progress_contacting);
-        message_text.setText(R.string.downloading_fw);
+        showProgress(R.string.progress_contacting, R.string.downloading_fw);
     }
+
+    public void showProgress(int progressRes, int messageRes) {
+        progress_text.setText(progressRes);
+        message_text.setText(messageRes);
+    }
+
+    public void showProgress(int progressRes, String messageRes) {
+        progress_text.setText(progressRes);
+        message_text.setText(messageRes);
+    }
+
+    public void showProgress(int messageRes) {
+        progress_text.setText("");
+        message_text.setText(messageRes);
+    }
+
     public void showEnableBluetooth(){
-        progress_text.setText(R.string.progress_bluetooth_off);
-        message_text.setText(R.string.enable_bt_and_try_again);
+        showProgress(R.string.progress_bluetooth_off, R.string.enable_bt_and_try_again);
     }
 
 
     public void showFailedConnectingScreen() {
-        progress_text.setText("");
-        message_text.setText(R.string.bt_pairing_failed);
+        showProgress(R.string.bt_pairing_failed);
     }
 
     public void showFailedDownloadAndExtract(){
         showFailedConnectingScreen();
+        //todo check this
         message_text.setText(R.string.fw_update_failed_download_and_extract);
     }
 
     public void showBluetoothConnectionLostScreen() {
-        progress_text.setText("");
-        message_text.setText(R.string.bt_pairing_connection_lost);
+        showProgress(R.string.bt_pairing_connection_lost);
     }
 
     @Override
@@ -97,7 +116,7 @@ public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter
     }
 
 
-
+//TODO back press will cancel fw update
 //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();
@@ -105,9 +124,6 @@ public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter
 //        getPresenter().cancelActualTask();
 //    }
 
-    public boolean wasDestroyed() {
-        return isDestroyed;
-    }
 
     @Override
     public void onAdapterEvent(AdapterEvent adapterEvent) {
@@ -147,8 +163,8 @@ public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter
     @Override
     public void onConnectionStarted() {
         Log.d(TAG, "onConnectionStarted");
-        progress_text.setText(R.string.fw_update_progress_contacting);
-        message_text.setText(R.string.fw_update_message_bt_connecting);
+        showProgress(R.string.fw_update_progress_contacting);
+        progress_text.setText(R.string.fw_update_message_bt_connecting);
     }
 
     @Override
@@ -159,19 +175,16 @@ public class FirmwareUpdateActivity extends BaseFragment<FirmwareUpdatePresenter
             case FIRMWARE_UPDATE_AVAILABLE:
                 break;
             case CONFIG_UPDATE_STARTED:
-                progress_text.setText(R.string.processing);
-                message_text.setText(R.string.installing_fw);
+                showProgress(R.string.processing, R.string.installing_fw);
                 break;
             case FIRMWARE_UPDATE_FINISHED:
-                progress_text.setText(R.string.blank);
-                message_text.setText(R.string.fw_install_success);
+                showProgress(R.string.fw_install_success);
                 getPresenter().saveCurrentVersionOnBe();
                 cancelButton.setText(R.string.wl_general_done);
                 getActivity().setResult(RESULT_OK);
                 break;
             case FIRMWARE_UPDATE_STARTED:
-                progress_text.setText(R.string.processing);
-                message_text.setText(getString(R.string.wl_general_firmware_update_pending,  getPresenter().getFromVersion(), getPresenter().getToVersion()));
+                showProgress(R.string.processing, getString(R.string.wl_general_firmware_update_pending,  getPresenter().getFromVersion(), getPresenter().getToVersion()));
                 break;
             default:
                 break;

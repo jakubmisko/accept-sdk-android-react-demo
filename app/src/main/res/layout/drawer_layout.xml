@@ -56,13 +56,13 @@
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_contactless"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="@string/switcher_contactless"
                 android:paddingTop="16dp"/>
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_usb"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="@string/switcher_usb"
                 android:paddingTop="16dp"/>
         </LinearLayout>

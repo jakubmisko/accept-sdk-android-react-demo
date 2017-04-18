@@ -15,8 +15,9 @@ import com.wirecard.accept.activities.base.BaseFragment;
 import com.wirecard.accept.exceptions.DeviceDiscoverException;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.DiscoverDevices;
+import com.wirecard.accept.help.RxHelper;
 import com.wirecard.accept.help.StringUtils;
-import com.wirecard.accept.rx.dialog.RxDialog;
+import com.wirecard.accept.rx.dialog.RxAlertDialog;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.wirecard.accept.sdk.extensions.PaymentFlowController;
 import nucleus.factory.RequiresPresenter;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -32,7 +34,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 @RequiresPresenter(PaymentPresenter.class)
 public class PaymentFragment extends BaseFragment<PaymentPresenter> {
-    private  final String TAG =getClass().getSimpleName() ;
+    private final String TAG = getClass().getSimpleName();
     @BindView(R.id.progress)
     ProgressBar progressBar;
     @BindView(R.id.status)
@@ -40,9 +42,11 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     @BindView(R.id.amount)
     TextView amount;
     private String amountValue;
+    private Subscription alertDialog;
 
     /**
      * create payment fragment instance with amount to be payed, payment method and sepa flag
+     *
      * @param arguments amount, payment method and sepa parameters
      * @return payment fragment
      */
@@ -74,8 +78,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     }
 
     public void showTerminalDiscoveryError(DeviceDiscoverException exception) {
-        //TODO check leakage and use unsubscribe after
-        RxDialog.create(getActivity(), getString(R.string.acceptsdk_dialog_discovery_error_title), getString(R.string.acceptsdk_dialog_discovery_error_message,
+        alertDialog = RxAlertDialog.create(getActivity(), getString(R.string.acceptsdk_dialog_discovery_error_title), getString(R.string.acceptsdk_dialog_discovery_error_message,
                 exception.getDiscoveryError() + " - " + exception.getMessage()), getString(android.R.string.ok))
                 .subscribe(click -> getActivity().finish());
     }
@@ -86,7 +89,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
             showNoDeviceError();
         } else {
             String[] devicesNames = DiscoverDevices.getDeviceNames(devices);
-            RxDialog.create(getActivity(), R.string.acceptsdk_dialog_terminal_chooser_title, android.R.string.cancel, devicesNames)
+            alertDialog = RxAlertDialog.create(getActivity(), R.string.acceptsdk_dialog_terminal_chooser_title, android.R.string.cancel, devicesNames)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(chosenDevice -> {
                                 showProgress(getString(R.string.acceptsdk_progress__connecting, devices.get(chosenDevice).displayName), true);
@@ -108,13 +111,12 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     }
 
     public void showPaymentFlowError(PaymentFlowController.Error error, String technicalDetails) {
-        //TODO check leakage and use unsubscribe after
-        RxDialog.create(getActivity(), getString(R.string.acceptsdk_dialog_payment_error_title), getString(R.string.acceptsdk_dialog_payment_error_message,
+        alertDialog = RxAlertDialog.create(getActivity(), getString(R.string.acceptsdk_dialog_payment_error_title), getString(R.string.acceptsdk_dialog_payment_error_message,
                 error + " - " + technicalDetails), getString(android.R.string.ok))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         click -> getActivity().finish(),
-                        err-> Log.e(TAG, err.getMessage())
+                        err -> Log.e(TAG, err.getMessage())
                 );
     }
 
@@ -143,7 +145,7 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
 
 
     public void showNoDeviceError() {
-        RxDialog.create(getActivity(), R.string.acceptsdk_dialog_no_terminals_title, R.string.acceptsdk_dialog_no_terminals_message, android.R.string.ok)
+        alertDialog = RxAlertDialog.create(getActivity(), R.string.acceptsdk_dialog_no_terminals_title, R.string.acceptsdk_dialog_no_terminals_message, android.R.string.ok)
                 .subscribe(click -> getActivity().finish());
     }
 
@@ -156,11 +158,17 @@ public class PaymentFragment extends BaseFragment<PaymentPresenter> {
     }
 
     public void startPayment(PaymentFlowController paymentFlowController) {
-        if(getArguments().containsKey(Constants.PAYMENT_METHOD) && getArguments().getString(Constants.PAYMENT_METHOD).equals("Cash")){
+        if (getArguments().containsKey(Constants.PAYMENT_METHOD) && getArguments().getString(Constants.PAYMENT_METHOD).equals("Cash")) {
 //            showProgress("Cash payment", false);
             getPresenter().payByCash(amountValue);
         } else {
             proceedToDevicesDiscovery(paymentFlowController);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxHelper.unsubscribe(alertDialog);
     }
 }

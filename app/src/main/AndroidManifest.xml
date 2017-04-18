@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.login.LoginActivityMaterial"
+            android:name=".activities.login.LoginActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -37,6 +37,13 @@
             android:name=".activities.paymentflow.PaymentFlowActivity"
             android:configChanges="screenSize|screenLayout|orientation"
             android:screenOrientation="portrait"/>
+        <!--<activity android:name=".activities.UI">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
     </application>
 
 </manifest>

@@ -103,10 +103,7 @@ dependencies {
     //sdk obfuscation
     compile project(':proguard-rules')
     //support
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:support-v4:25.1.1'
-//    compile 'com.android.support:appcompat-v7:25.1.0'
+    //    compile 'com.android.support:appcompat-v7:25.1.0'
 //    compile 'com.android.support:design:25.1.0'
 //    compile 'com.android.support:support-v4:25.1.0'
     //picasso for image processing
@@ -141,10 +138,13 @@ dependencies {
 //    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
 //    testCompile 'org.powermock:powermock-classloading-xstream:1.6.6'
 //    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.6'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'io.reactivex:rxjava:1.2.6'
     compile 'com.artemzin.rxjava:proguard-rules:1.2.6.0'

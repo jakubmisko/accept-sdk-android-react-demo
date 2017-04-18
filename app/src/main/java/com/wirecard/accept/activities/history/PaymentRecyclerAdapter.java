@@ -31,6 +31,16 @@ public class PaymentRecyclerAdapter extends RecyclerView.Adapter<PaymentRecycler
     private Context context;
     private TransactionsHistoryFragment.HistoryPopupMenuCallback popupMenuCallback;
 
+    public void clear(){
+        payments.clear();
+//        notifyDataSetChanged();
+    }
+
+    public void setPayments(List<Payment> payments){
+        this.payments.addAll(payments);
+//        notifyDataSetChanged();
+    }
+
     public PaymentRecyclerAdapter(List<Payment> payments, TransactionsHistoryFragment.HistoryPopupMenuCallback popupMenuCallback) {
         this.payments = payments;
         this.popupMenuCallback = popupMenuCallback;

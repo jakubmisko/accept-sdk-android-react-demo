@@ -53,7 +53,11 @@ public class NumpadPresenter extends Presenter<NumpadFragment> {
                 return ZERO;
             default:
                 if (acumulator.length() == maxDigits) {
+                    //amount reached maximum so ignore all next events
                     return acumulator;
+                } else if(acumulator.equals("0")){
+                    //after backspace or clear there may remain zero in front of amount so remove it
+                    return event;
                 }
                 return acumulator + event;
         }

@@ -5,8 +5,6 @@
  */
 package com.wirecard.accept.activities.history;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -20,6 +18,10 @@ import android.view.ViewGroup;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseFragment;
+import com.wirecard.accept.activities.history.receipt.Receipt;
+import com.wirecard.accept.help.RxHelper;
+import com.wirecard.accept.rx.dialog.RxAlertDialog;
+import com.wirecard.accept.rx.dialog.RxProgressDialog;
 
 import java.util.List;
 
@@ -29,22 +31,17 @@ import de.wirecard.accept.sdk.backend.AcceptBackendService;
 import de.wirecard.accept.sdk.backend.AcceptTransaction;
 import de.wirecard.accept.sdk.model.Payment;
 import nucleus.factory.RequiresPresenter;
+import rx.Subscription;
 
-//TODO filter?
 @RequiresPresenter(TransactionHistioryPresenter.class)
-public class TransactionsHistoryFragment extends BaseFragment<TransactionHistioryPresenter> {
+public class TransactionsHistoryFragment extends BaseFragment<TransactionHistioryPresenter> implements SwipeRefreshLayout.OnRefreshListener{
     private String TAG = getClass().getSimpleName();
 
-//    @BindView(R.id.loading)
-//    View loading;
-
-    //    @BindView(R.id.list)
-//    ListView listView;
     @BindView(R.id.rvList)
     RecyclerView recyclerView;
     @BindView(R.id.swipeContainer)
     SwipeRefreshLayout container;
-    private ProgressDialog progressDialog;
+    private Subscription progressDialog, loadingError;
 
     @Nullable
     @Override
@@ -57,99 +54,49 @@ public class TransactionsHistoryFragment extends BaseFragment<TransactionHistior
         return view;
     }
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-////        setContentView(R.layout.activity_history);
-//        setContentView(R.layout.fragment_history);
-//        ButterKnife.bind(this);
-//        showProgress("Loading payments...");
-//        getPresenter().loadPayments(1, 100, null, null);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //listview + array adapter
-//        final String[] menu = new String[]{Constants.RECEIPT, Constants.REVERSE_REFUND};
-//        PaymentArrayAdapter pa = new PaymentArrayAdapter(this);
-//        listView.setAdapter(pa);
-////        getPayments(context, trxHistoryView, listView, loading);
-//        getPresenter().loadPayments(1, 100, null, null);
-//        //TODO rxAlert?
-//        listView.setOnItemClickListener((parent, view, position, id) -> {
-//            final Payment payment = (Payment) listView.getAdapter().getItem(position);
-//            //TODO simple menu instead alert dialog
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            //just simple way how to display data into the list
-//            builder.setItems(menu, (dialog, which) -> {
-//                if (menu[which].equals(Constants.RECEIPT)) {
-//                    Receipt.showReceipt(this, payment);
-//                } else if (menu[which].equals(Constants.REVERSE_REFUND)) {
-//                    loading.setVisibility(View.VISIBLE);
-//                    getPresenter().reverseOrRefund(payment);
-//                }
-//            });
-//            builder.show();
-//        });
-//    }
+    public void fillList(List<Payment> payments) {
+        Log.d(TAG, "fillList");
+        if(recyclerView.getAdapter() == null) {
+            PaymentRecyclerAdapter recyclerAdapter = new PaymentRecyclerAdapter(payments, (position, action) -> {
+                Payment p = payments.get(position);
+                switch (action) {
+                    case "Receipt":
+                        new Receipt(getActivity(), p).showReceipt();
+                        break;
+                    case "Reverse":
+                    case "Refund":
+                        showProgress(action);
+                        getPresenter().reverseOrRefund(p);
+                        break;
+                    default:
+                        //Toast.makeText(TransactionsHistoryFragment.this, action + "is not implemented", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(container, action + "is not implemented", Snackbar.LENGTH_SHORT).show();
+                }
 
-//    private void setOnTouchListeners(){
-//        recyclerView.setOnTouchListener(new RecyclerItemC);
-//    }
-
-    public void fillListView(List<Payment> payments) {
-        Log.d(TAG, "fillListView");
-//        if (listView.getAdapter() != null) {
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-//                ((ArrayAdapter<Payment>) listView.getAdapter()).addAll(payments);
-//            } else {
-//                for (Payment p : payments)
-//                    ((ArrayAdapter<Payment>) listView.getAdapter()).add(p);
-//            }
-////            loading.setVisibility(View.GONE);
-//        }
-        PaymentRecyclerAdapter recyclerAdapter = new PaymentRecyclerAdapter(payments, (position, action) -> {
-            Payment p = payments.get(position);
-            switch (action) {
-                case "Receipt":
-                    Receipt.showReceipt(getActivity(), p);
-                    break;
-                case "Reverse":
-                case "Refund":
-                    showProgress(action);
-                    getPresenter().reverseOrRefund(p);
-                    break;
-                default:
-                    //Toast.makeText(TransactionsHistoryFragment.this, action + "is not implemented", Toast.LENGTH_SHORT).show();
-                    Snackbar.make(container, action + "is not implemented", Snackbar.LENGTH_SHORT).show();
-            }
-
-        });
-        recyclerView.setAdapter(recyclerAdapter);
-        recyclerAdapter.notifyDataSetChanged();
+            });
+            container.setOnRefreshListener(this);
+            recyclerView.setAdapter(recyclerAdapter);
+        } else {
+            ((PaymentRecyclerAdapter)recyclerView.getAdapter()).setPayments(payments);
+        }
+        recyclerView.getAdapter().notifyDataSetChanged();
         dissmisProgress();
     }
 
     private void showProgress(String message) {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity(), R.style.AppTheme_Dark_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage(message);
-        }
-        progressDialog.show();
+        progressDialog = RxProgressDialog.create(getActivity(), message)
+                .subscribe();
     }
 
     private void dissmisProgress() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        RxHelper.unsubscribe(progressDialog);
+        container.setRefreshing(false);
     }
 
-    //TODO rxAlert?
     public void paymentsLoadingError(final Throwable error) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(this.getString(R.string.dialog_trx_load_err))
-                .setMessage(error.getMessage())
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> getActivity().finish())
-                .create()
-                .show();
+        loadingError = RxAlertDialog.create(getActivity(), this.getString(R.string.dialog_trx_load_err), error.getMessage())
+                .subscribe(aVoid -> getActivity().finish(),
+                        throwable -> Log.e(TAG, throwable.getMessage()));
     }
 
     public void notifyReverseRefund(AcceptBackendService.Response response) {
@@ -182,7 +129,20 @@ public class TransactionsHistoryFragment extends BaseFragment<TransactionHistior
         dissmisProgress();
     }
 
+    @Override
+    public void onRefresh() {
+        ((PaymentRecyclerAdapter)recyclerView.getAdapter()).clear();
+        getPresenter().loadPayments(1, 100, null, null);
+    }
+
     public interface HistoryPopupMenuCallback {
         void onItemSelected(int position, String action);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxHelper.unsubscribe(loadingError);
+        dissmisProgress();
     }
 }

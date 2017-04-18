@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.wirecard.accept.activities.login.LoginActivityMaterial;
+import com.wirecard.accept.activities.login.LoginActivity;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.rx.receivers.RxBroadcastReceiver;
 
@@ -20,10 +20,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class Application extends android.app.Application {
     private String errorMessage = "";
     private Subscription receiver = null;
-    // used for switch using usb or bt
-    private Boolean usb = false;
-    // used for switch using usb or bt
-    private Boolean contactless = false;
 
     @Override
     public void onCreate() {
@@ -42,18 +38,17 @@ public class Application extends android.app.Application {
         if (AcceptSDK.isLoggedIn()) {
             AcceptSDK.sessionRefresh((apiResult, stringStringHashMap) -> {
                         if (!apiResult.isSuccess()) {
-                            sendLogoutIntentAndGoLogin();
+                            sendLogoutIntent();
                         }
                     }
             );
         }
-        //todo apply ui scheduler by composition
         receiver = RxBroadcastReceiver.create(this, new IntentFilter(AcceptSDKIntents.SESSION_TERMINATED))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> {
                     //Broadcast receiver onReceive:
                     Log.e("Session Timeout", "sending Log Out");
-                    sendLogoutIntentAndGoLogin();
+                    sendLogoutIntent();
                 });
     }
 
@@ -61,9 +56,9 @@ public class Application extends android.app.Application {
         return errorMessage;
     }
 
-    public void sendLogoutIntentAndGoLogin() {
+    public void sendLogoutIntent() {
         AcceptSDK.logout();
-        Intent intent = new Intent(this, LoginActivityMaterial.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(Constants.LOGOUT, true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
@@ -72,21 +67,10 @@ public class Application extends android.app.Application {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    @Override
-    public void onTerminate() {
-        AcceptSDK.finish();
-        if (!receiver.isUnsubscribed()) {
-            receiver.unsubscribe();
-            receiver = null;
-        }
-        super.onTerminate();
-    }
-
-    public Boolean isUsb() {
-        return usb;
-    }
-
-    public Boolean isContactless() {
-        return contactless;
-    }
+//    @Override
+//    public void onTerminate() {
+//        AcceptSDK.finish();
+//        RxHelper.unsubscribe(receiver);
+//        super.onTerminate();
+//    }
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/select_terminal"
+        android:textSize="20sp"/>
+
+    <RadioGroup
+        android:id="@+id/terminals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttons_section"
+        android:layout_below="@id/label"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"/>
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/buttons_section"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="48dp"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--style="?android:attr/buttonBarStyle">-->
+    <!--<Button-->
+    <!--android:id="@+id/cancel"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="36dp"-->
+    <!--android:text="@string/btn_cancel"-->
+    <!--android:layout_marginTop="6dp"-->
+    <!--style="?android:attr/buttonBarButtonStyle"/>-->
+
+    <!--<Button-->
+    <!--android:id="@+id/confirm"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="36dp"-->
+    <!--android:text="@string/btn_confirm"-->
+    <!--android:layout_marginTop="6dp"-->
+    <!--android:layout_marginLeft="6dp"-->
+    <!--android:layout_marginRight="6dp"-->
+    <!--android:layout_toRightOf="@id/cancel"-->
+    <!--style="?android:attr/buttonBarButtonStyle"/>-->
+    <!--</RelativeLayout>-->
+    <FrameLayout
+        android:id="@+id/buttons_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
+
+        <include layout="@layout/persistent_buttons"/>
+    </FrameLayout>
+
+</RelativeLayout>

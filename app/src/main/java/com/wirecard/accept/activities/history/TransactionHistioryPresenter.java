@@ -17,11 +17,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jakub on 18.06.2016.
  */
+//TODO put RxPresenter#stop
 public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistoryFragment> {
     private String TAG = getClass().getSimpleName();
 
-    private final int LOAD_PAYMENTS = 0;
-    private final int REVERSE_REFUND = 1;
+    final int LOAD_PAYMENTS = 0;
+    final int REVERSE_REFUND = 1;
     //load payments parameters
     private int pageNum;
     private int pageSize;
@@ -42,7 +43,7 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
                                         subscriber.onCompleted();
                                     } else {
                                         //wrap problem to throwable
-                                        subscriber.onError(new Throwable(apiResult.getDescription()));
+                                        subscriber.onError(new Throwable(apiResult.getMessage()));
                                     }
                                 })
                         //do network request on non ui thread
@@ -51,13 +52,13 @@ public class TransactionHistioryPresenter extends RxPresenter<TransactionsHistor
                         //handle data presentation on main ui thread
                         .observeOn(AndroidSchedulers.mainThread()),
                 //present data
-                TransactionsHistoryFragment::fillListView,
+                TransactionsHistoryFragment::fillList,
                 //present error
                 TransactionsHistoryFragment::paymentsLoadingError
 
         );
         //do reverse/refund request for transaction
-        restartableFirst(REVERSE_REFUND,
+        restartableLatestCache(REVERSE_REFUND,
                 () -> Observable.create((Observable.OnSubscribe<AcceptBackendService.Response>) subscriber -> {
                     if (payment.isReversible()) {
                         payment.setStatusToReversed();

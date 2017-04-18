@@ -22,31 +22,32 @@
         android:layout_below="@+id/label"
         android:layout_above="@+id/buttons_section"/>
 
-    <LinearLayout
-        android:id="@+id/buttons_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        style="?android:attr/buttonBarStyle">
         <Button
-            android:id="@+id/cancel_signature_confirmation"
+            android:id="@+id/cancel"
+            android:text="@string/btn_cancel"
+            android:layout_marginTop="6dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/payment_cancel_button"
-            android:theme="@style/MyButton"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:layout_height="36dp"
+            style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
-            android:id="@+id/confirm_signature"
+            android:id="@+id/confirm"
+            android:layout_marginTop="6dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="36dp"
             android:text="@string/payment_confirm_button"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:layout_toRightOf="@id/cancel"
+            style="?android:attr/buttonBarButtonStyle"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>

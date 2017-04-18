@@ -21,9 +21,9 @@ public class LoginActivityTest extends BaseTest {
     @Test
     public void wrongLogin() {
         LoginActivity activity = Robolectric.buildActivity(LoginActivity.class).create().visible().get();
-        EditText userName = (EditText) activity.findViewById(R.id.username);
+        EditText userName = (EditText) activity.findViewById(R.id.email);
         EditText password = (EditText) activity.findViewById(R.id.password);
-        Button login = (Button) activity.findViewById(R.id.login);
+        Button login = (Button) activity.findViewById(R.id.btn_login);
 
         login.performClick();
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();

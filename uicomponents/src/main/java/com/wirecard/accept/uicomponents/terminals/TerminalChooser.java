@@ -49,7 +49,7 @@ public class TerminalChooser extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_terminals, container, false);
+        View view = inflater.inflate(R.layout.terminals, container, false);
         radioGroup = (RadioGroup) view.findViewById(R.id.terminals);
         if(getArguments().containsKey("names")){
             terminalNames = getArguments().getStringArrayList("names");
@@ -64,7 +64,9 @@ public class TerminalChooser extends DialogFragment {
             @Override
             public void onClick(View v) {
                 terminalsContract.onTerminalChoosed(getChoosenTerminal());
-                dismiss();
+                if(getDialog() != null) {
+                    dismiss();
+                }
             }
         });
         Button cancel = (Button) view.findViewById(R.id.cancel);
@@ -72,7 +74,9 @@ public class TerminalChooser extends DialogFragment {
             @Override
             public void onClick(View v) {
                 terminalsContract.onTerminalNotChoosed();
-                dismiss();
+                if(getDialog() != null) {
+                    dismiss();
+                }
             }
         });
         return view;
@@ -86,6 +90,7 @@ public class TerminalChooser extends DialogFragment {
             button.setText(name);
             radioGroup.addView(button);
         }
+        setDialogApperance();
     }
 
     private String getChoosenTerminal(){
@@ -94,8 +99,16 @@ public class TerminalChooser extends DialogFragment {
         return ((RadioButton) getView().findViewById(checkedOptionId)).getText().toString();
     }
 
+    private void setDialogApperance() {
+        setCancelable(false);
+        //TODO change dialog size
+//        if(!softNullCheck(getDialog())) {
+//            RelativeLayout container = (RelativeLayout) getView().findViewById(R.id.container);
+//            container.getLayoutParams().height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+//        }
+    }
 
-//    @Override
+    //    @Override
 //    public void onSaveInstanceState(Bundle outState) {
 //        super.onSaveInstanceState(outState);
 //        outState.putInt("actualValId", radioGroup.getCheckedRadioButtonId());

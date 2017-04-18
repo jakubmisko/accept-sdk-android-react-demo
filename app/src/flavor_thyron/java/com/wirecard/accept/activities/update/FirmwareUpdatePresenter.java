@@ -19,8 +19,8 @@ import rx.Observable;
 /**
  * Created by jakub on 16.06.2016.
  */
-public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity> {
-    private static final String TAG = FirmwareUpdatePresenter.class.getSimpleName();
+public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateFragment> {
+    private final String TAG = getClass().getSimpleName();
 
     private CNPDevice currentDev;
     private CNPController<?> controller = null; //old version of implementation
@@ -63,27 +63,23 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateActivity>
                     subscriber.onNext(null);
                     subscriber.onCompleted();
                 }),
-                (firmwareUpdateActivity, t) -> {
-                    if (!firmwareUpdateActivity.wasDestroyed()) {
-                        handleFirmwareFileReady(firmwareUpdateActivity);
-                    }
-                },
-                (firmwareUpdateActivity, throwable) -> {
-                    firmwareUpdateActivity.showFailedDownloadAndExtract();
+                (firmwareUpdateFragment, t) -> handleFirmwareFileReady(firmwareUpdateFragment),
+                (firmwareUpdateFragment, throwable) -> {
+                    firmwareUpdateFragment.showFailedDownloadAndExtract();
                 }
 
         );
     }
 
     @Override
-    protected void onTakeView(FirmwareUpdateActivity firmwareUpdateActivity) {
-        super.onTakeView(firmwareUpdateActivity);
+    protected void onTakeView(FirmwareUpdateFragment firmwareUpdateFragment) {
+        super.onTakeView(firmwareUpdateFragment);
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            firmwareUpdateActivity.showEnableBluetooth();
+            firmwareUpdateFragment.showEnableBluetooth();
         } else {
-            firmwareUpdateActivity.showFirmwareScreen_LoadingVersionInfo();
-            context = firmwareUpdateActivity.getActivity();
+            firmwareUpdateFragment.showFirmwareScreen_LoadingVersionInfo();
+            context = firmwareUpdateFragment.getActivity();
             start(DOWNLOAD_FW);
         }
     }

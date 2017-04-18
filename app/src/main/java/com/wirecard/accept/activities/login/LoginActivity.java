@@ -1,6 +1,5 @@
 package com.wirecard.accept.activities.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -17,7 +16,8 @@ import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.menu.MenuActivity;
 import com.wirecard.accept.help.Constants;
 import com.wirecard.accept.help.RxHelper;
-import com.wirecard.accept.rx.dialog.RxDialog;
+import com.wirecard.accept.rx.dialog.RxAlertDialog;
+import com.wirecard.accept.rx.dialog.RxProgressDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +29,7 @@ import rx.Subscription;
  * A login screen that offers login via username/password.
  */
 @RequiresPresenter(LoginPresenter.class)
-public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
+public class LoginActivity extends BaseActivity<LoginPresenter> {
     private final String TAG = getClass().getSimpleName();
     // UI references.
     @BindView(R.id.email)
@@ -45,8 +45,8 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
     @BindView(R.id.version)
     TextView version;
 
-    private ProgressDialog progressDialog;
     private Subscription alertDialog;
+    private Subscription progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +62,17 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid username, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     @OnClick(R.id.btn_login)
     void attemptLogin() {
-//TODO REMOVE!!!
-        username.setText("jm");
-        password.setText("bckSturova27*1");
         // Reset errors.
         userLayout.setError(null);
+        userLayout.setErrorEnabled(false);
         passwordLayout.setError(null);
+        passwordLayout.setErrorEnabled(false);
 
         // Store values at the time of the login attempt.
         String usrStr = this.username.getText().toString();
@@ -84,6 +83,7 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
 
         if (TextUtils.isEmpty(passStr)) {
             this.passwordLayout.setError(getString(R.string.error_empty_password));
+            passwordLayout.setErrorEnabled(true);
             focusView = this.password;
             cancel = true;
         }
@@ -91,6 +91,7 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
         // Check for a valid username address.
         if (TextUtils.isEmpty(usrStr)) {
             this.userLayout.setError(getString(R.string.error_empty_username));
+            userLayout.setErrorEnabled(true);
             focusView = this.username;
             cancel = true;
         }
@@ -108,18 +109,12 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
     }
 
     private void showProgress() {
-        if(progressDialog == null) {
-            progressDialog = new ProgressDialog(LoginActivityMaterial.this, R.style.AppTheme_Dark_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Authenticating...");
-        }
-        progressDialog.show();
+        progressDialog = RxProgressDialog.create(this, "Authenticating...")
+                .subscribe();
     }
 
     private void dissmisProgress(){
-        if(progressDialog != null){
-            progressDialog.dismiss();
-        }
+        RxHelper.unsubscribe(progressDialog);
     }
 
     public void goToMenu() {
@@ -130,8 +125,7 @@ public class LoginActivityMaterial extends BaseActivity<LoginPresenter> {
 
     public void presentFormError(String message) {
         dissmisProgress();
-        alertDialog = RxDialog.create(this, getString(R.string.login_error), message)
-//                .doOnEach(notification -> enableForm(true))
+        alertDialog = RxAlertDialog.create(this, getString(R.string.login_error), message)
                 .subscribe(click -> Log.d(TAG, "presentFormError: dialog button clicked"),
                         err -> Log.e(TAG, "presentFormError: ", err));
     }

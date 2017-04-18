@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nucleus.factory.RequiresPresenter;
 
-//TODO start from floating point part, refactor name
 @RequiresPresenter(NumpadPresenter.class)
 public class NumpadFragment extends BaseFragment<NumpadPresenter> implements View.OnClickListener {
     @BindView(R.id.amount)
@@ -86,8 +85,6 @@ public class NumpadFragment extends BaseFragment<NumpadPresenter> implements Vie
         attachListeners();
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.payment_methods, android.R.layout.simple_spinner_dropdown_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         paymentMethods.setAdapter(adapter);
         //set max acceptable digits for amount, for demonstration purposes we consider just one item in basket

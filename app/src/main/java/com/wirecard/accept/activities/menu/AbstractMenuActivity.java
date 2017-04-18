@@ -8,16 +8,16 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.amount.NumpadFragment;
 import com.wirecard.accept.activities.base.BaseActivity;
 import com.wirecard.accept.activities.history.TransactionsHistoryFragment;
-import com.wirecard.accept.activities.login.LoginActivityMaterial;
+import com.wirecard.accept.activities.login.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,9 +35,7 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    TextView firstName;
-    TextView lastName;
-
+    private SwitchCompat usb, contactless;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +48,9 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
         navigationView.setNavigationItemSelectedListener(this::handleMenuItemClick);
         NumpadFragment numpadFragment = new NumpadFragment();
         recplaceFragment(numpadFragment);
+
+        usb = (SwitchCompat) navigationView.findViewById(R.id.switch_usb);
+        contactless = (SwitchCompat) navigationView.findViewById(R.id.switch_contactless);
 //        firstName.setText("Jakub");
 //        lastName.setText("Misko");
 
@@ -80,7 +81,7 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
             case R.id.logout:
                 AcceptSDK.logout();
                 Toast.makeText(this, "Bye", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, LoginActivityMaterial.class));
+                startActivity(new Intent(this, LoginActivity.class));
                 finish();
         }
         return recplaceFragment(fragment);
@@ -97,5 +98,13 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
             return true;
         }
         return false;
+    }
+
+    public boolean isUsbDevice(){
+        return usb.isChecked();
+    }
+
+    public boolean isContactless(){
+        return contactless.isChecked();
     }
 }

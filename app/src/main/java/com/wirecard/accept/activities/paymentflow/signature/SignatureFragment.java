@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseFragment;
-import com.wirecard.accept.rx.dialog.RxDialog;
+import com.wirecard.accept.rx.dialog.RxAlertDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,9 +23,9 @@ import butterknife.OnClick;
 public class SignatureFragment extends BaseFragment {
     @BindView(R.id.signature)
     SignatureView signatureView;
-    @BindView(R.id.confirm_signature)
+    @BindView(R.id.confirm)
     Button confirm;
-    @BindView(R.id.cancel_signature_confirmation)
+    @BindView(R.id.cancel)
     Button cancel;
     @BindView(R.id.label)
     TextView label;
@@ -48,7 +48,7 @@ public class SignatureFragment extends BaseFragment {
         return view;
     }
 
-    @OnClick(R.id.confirm_signature)
+    @OnClick(R.id.confirm)
     public void confirmHandle() {
         //check if signature isn't blank
         if (signatureView.isSomethingDrawn()) {
@@ -62,17 +62,17 @@ public class SignatureFragment extends BaseFragment {
             showProgress();
         } else {
             //TODO check for leakage, maybe unsubscribe needed
-            RxDialog.create(getActivity(), R.string.acceptsdk_dialog_nothing_drawn_title, R.string.acceptsdk_dialog_nothing_drawn_message, android.R.string.ok).subscribe();
+            RxAlertDialog.createAlert(getActivity(), R.string.acceptsdk_dialog_nothing_drawn_message, android.R.string.ok).subscribe();
         }
     }
 
-    @OnClick(R.id.cancel_signature_confirmation)
+    @OnClick(R.id.cancel)
     public void cancelHandle() {
         //when you try to cancel signature show confirmation dialog
-        RxDialog.create(getActivity(), R.string.acceptsdk_dialog_cancel_signature_request_title, R.string.acceptsdk_dialog_cancel_signature_request_message,
-                android.R.string.yes, android.R.string.no).filter(btn -> true).subscribe(click -> {
-            confirmRequestWrapper.cancel();
-        });
+        RxAlertDialog.createAlert(getActivity(), R.string.acceptsdk_dialog_cancel_signature_request_message, R.string.yes, R.string.no)
+                //filter only positive button and ignore negative
+                .filter(btn -> btn)
+                .subscribe(click -> confirmRequestWrapper.cancel());
     }
 
     public void setSignatureRequest(ConfirmRequestWrapper confirmRequestWrapper) {
@@ -90,7 +90,7 @@ public class SignatureFragment extends BaseFragment {
     public void showProgress(){
         if(barProgressDialog == null) {
             barProgressDialog = new ProgressDialog(getActivity(), R.style.AppTheme_Dark_Dialog);
-            barProgressDialog.setTitle("Signature");
+//            barProgressDialog.setTitle("Signature");
             barProgressDialog.setMessage("Uploading signature ...");
             barProgressDialog.setIndeterminate(true);
         }

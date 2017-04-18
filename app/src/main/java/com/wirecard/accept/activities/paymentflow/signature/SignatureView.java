@@ -44,7 +44,7 @@ public class SignatureView extends View {
     public SignatureView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPainting();
-        paths = new ArrayList<SVPath>();
+        paths = new ArrayList<>();
     }
 
     public SignatureView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -92,6 +92,7 @@ public class SignatureView extends View {
      * @return
      */
     public byte[] compressSignatureBitmapToPNG() {
+        //TODO IO scheduler
         final Bitmap scaledBitmap = Bitmap.createScaledBitmap(signatureBitmap, signatureBitmap.getWidth() / 2, signatureBitmap.getHeight() / 2, true);
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         scaledBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
