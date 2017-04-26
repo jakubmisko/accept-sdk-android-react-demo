@@ -90,8 +90,8 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
         }))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                    result -> view().subscribe(PaymentFragment::successfulPayment),
-                    error -> view().subscribe(paymentFragment -> paymentFragment.showProgress(error.getMessage(), false))
+                    result -> getView().successfulPayment(),
+                    error -> getView().showProgress(error.getMessage(), false)
             );
     }
 }

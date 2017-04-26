@@ -54,7 +54,7 @@
     public static int e(...);
 }
 
-# java 8 lambdas
+# java 8 retrolambda
 -dontwarn java.lang.invoke.*
 
 # picaso
