@@ -16,14 +16,11 @@ import de.wirecard.accept.sdk.model.TerminalInfo;
 import nucleus.presenter.RxPresenter;
 import rx.Observable;
 
-/**
- * Created by jakub on 16.06.2016.
- */
 public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateFragment> {
     private final String TAG = getClass().getSimpleName();
 
     private CNPDevice currentDev;
-    private CNPController<?> controller = null; //old version of implementation
+    private CNPController<?> controller = null;
 
     private boolean terminalResetByApp = false;
     private boolean restarted = false;
@@ -59,7 +56,6 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateFragment>
                     } catch (IOException e) {
                         subscriber.onError(e);
                     }
-                    //TODO onNext(null) may not work
                     subscriber.onNext(null);
                     subscriber.onCompleted();
                 }),
@@ -91,11 +87,8 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateFragment>
      but for now you can use it like best way to upload firmware
      */
     public void handleFirmwareFileReady(CNPListener listener) {
-        //TODO there may be main thread scheduler
-//        handleFile = Observable.create(s -> {
         controller.setCNPListener(listener);
         controller.connectToDevice(currentDev, true, true, -1);
-//        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
     }
 
     @Override
@@ -124,8 +117,9 @@ public class FirmwareUpdatePresenter extends RxPresenter<FirmwareUpdateFragment>
 
     void saveCurrentVersionOnBe() {
         finishedUpdate = true;
-        if (restarted)
+        if (restarted) {
             AcceptSDK.saveCurrentVersionOfFirmwareInBackend(null);
+        }
     }
 
     void onConnectionEstablished(boolean restartRequired) {

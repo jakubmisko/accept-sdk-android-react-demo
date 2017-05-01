@@ -27,11 +27,6 @@ public class PaymentPresenter extends RxPresenter<PaymentFragment> {
     private Context context;
     private PaymentFlowController controller;
 
-    @Override
-    protected void onTakeView(PaymentFragment paymentFragment) {
-        super.onTakeView(paymentFragment);
-
-    }
 
     @Override
     protected void onCreate(Bundle savedState) {

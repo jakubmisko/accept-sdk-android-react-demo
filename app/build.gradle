@@ -34,14 +34,10 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable true
+            zipAlignEnabled true
+            jniDebuggable true
         }
-//        debug {
-//            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            debuggable true
-//            zipAlignEnabled true
-//            jniDebuggable true
-//        }
         all {
             def Properties appProps = new Properties()
             try {
@@ -94,50 +90,13 @@ dependencies {
     compile(name: 'accept-sdk-android-acceptsdksource-release', ext: 'aar')
     flavor_thyronCompile(name: 'accept-sdk-android-thyronextension-release', ext: 'aar')
     flavor_bbposCompile(name: 'accept-sdk-android-bbposextension-release', ext: 'aar')
-//    compile 'com.github.mposSVK:acceptSDK-Android:1.5.4'
-//    flavor_thyronCompile 'com.github.mposSVK:accept-android-extension-spire:1.5.3'
-//    flavor_bbposCompile 'com.github.mposSVK:accept-android-extension-bbpos:1.5.1'
     //sdk dependencies
     compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.5'
     //sdk obfuscation
     compile project(':proguard-rules')
     //support
-    //    compile 'com.android.support:appcompat-v7:25.1.0'
-//    compile 'com.android.support:design:25.1.0'
-//    compile 'com.android.support:support-v4:25.1.0'
-    //picasso for image processing
-    //rxjava
-    //        compile 'com.trello:rxlifecycle-components:1.0'
-    //icepick - save state
-    //butterknife ui binding
-    //rx ui wrappers
-//    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-    //nucleus mvp with rx
-    //rxjava2 support
-    //compile 'info.android15.nucleus5:nucleus:5.0.0-beta1'
-    //proguard workaround
-//    compile 'com.squareup.okhttp3:okhttp:3.6.0'
-//    https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp
-//    compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.1.0'
-//    https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-csv
-//    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.8.6'
-//    compile 'com.github.felHR85:UsbSerial:4.5'
-//    compile 'com.android.support:recyclerview-v7:25.1.0'
     compile project(':uicomponents')
-    //tests
-//    testCompile('org.robolectric:robolectric:3.0') {
-//        exclude module: 'classworlds'
-//        exclude module: 'commons-logging'
-//        exclude module: 'httpclient'
-//    }
-    // https://mvnrepository.com/artifact/org.robolectric/robolectric
-
-    //powermock
-//    testCompile 'org.powermock:powermock-api-mockito:1.6.6'
-//    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
-//    testCompile 'org.powermock:powermock-classloading-xstream:1.6.6'
-//    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.6'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'

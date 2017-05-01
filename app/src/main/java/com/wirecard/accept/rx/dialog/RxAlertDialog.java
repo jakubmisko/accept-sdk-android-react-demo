@@ -62,8 +62,6 @@ public class RxAlertDialog {
         });
     }
 
-
-    //todo abstraction
     @NonNull
     public static Observable<Boolean> create(Context context, String title, String message, int positiveBtn, int negativeBtn) {
         return Observable.create((Subscriber<? super Boolean> subscriber) -> {

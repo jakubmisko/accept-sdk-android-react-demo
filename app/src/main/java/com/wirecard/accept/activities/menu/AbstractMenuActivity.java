@@ -36,6 +36,7 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
     Toolbar toolbar;
 
     private SwitchCompat usb, contactless;
+    private int actualFragment = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +52,11 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
 
         usb = (SwitchCompat) navigationView.findViewById(R.id.switch_usb);
         contactless = (SwitchCompat) navigationView.findViewById(R.id.switch_contactless);
-//        firstName.setText("Jakub");
-//        lastName.setText("Misko");
 
 
     }
 
     private void configureToolbar() {
-        //TODO on button press show drawer
         toolbar.setTitle("New Payment");
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -69,6 +67,11 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
 
     protected boolean handleMenuItemClick(MenuItem menuItem) {
         Fragment fragment = null;
+        if(actualFragment == menuItem.getItemId()){
+            return false;
+        } else {
+            actualFragment = menuItem.getItemId();
+        }
         switch (menuItem.getItemId()) {
             case R.id.new_trx:
                 toolbar.setTitle("New payment");
@@ -90,7 +93,6 @@ public abstract class AbstractMenuActivity<P extends RxPresenter> extends BaseAc
     protected boolean recplaceFragment(Fragment fragment) {
         drawerLayout.closeDrawers();
         FragmentManager fragmentManager = getFragmentManager();
-        //todo not replace if fragment is already there
         if (fragment != null && fragment != fragmentManager.findFragmentById(R.id.frame)) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.frame, fragment);

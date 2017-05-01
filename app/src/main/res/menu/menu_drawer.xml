@@ -20,15 +20,5 @@
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="@string/menu_item_log_out"/>
     </group>
-    <!--<group android:menuCategory="container">-->
-    <!--<item-->
-        <!--android:id="@+id/contactless"-->
-        <!--android:title=""-->
-        <!--app:actionLayout="@layout/menu_switcher_contactless"/>-->
-    <!--<item-->
-        <!--android:id="@+id/usb"-->
-        <!--android:title=""-->
-        <!--app:actionLayout="@layout/menu_switcher_usb"/>-->
-    <!--</group>-->
 
 </menu>

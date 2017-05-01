@@ -1,6 +1,5 @@
 package com.wirecard.accept.activities.paymentflow.signature;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,11 +10,14 @@ import android.widget.TextView;
 
 import com.wirecard.accept.R;
 import com.wirecard.accept.activities.base.BaseFragment;
+import com.wirecard.accept.help.RxHelper;
 import com.wirecard.accept.rx.dialog.RxAlertDialog;
+import com.wirecard.accept.rx.dialog.RxProgressDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscription;
 
 /**
  * hadling of signature capture and confirmation
@@ -31,7 +33,7 @@ public class SignatureFragment extends BaseFragment {
     TextView label;
 
     private ConfirmRequestWrapper confirmRequestWrapper;
-    private ProgressDialog barProgressDialog;
+    private Subscription dialog;
 
     public static SignatureFragment newInstance(ConfirmRequestWrapper confirmRequestWrapper) {
         SignatureFragment fragment = new SignatureFragment();
@@ -61,15 +63,14 @@ public class SignatureFragment extends BaseFragment {
             }
             showProgress();
         } else {
-            //TODO check for leakage, maybe unsubscribe needed
-            RxAlertDialog.createAlert(getActivity(), R.string.acceptsdk_dialog_nothing_drawn_message, android.R.string.ok).subscribe();
+            dialog = RxAlertDialog.createAlert(getActivity(), R.string.acceptsdk_dialog_nothing_drawn_message, android.R.string.ok).subscribe();
         }
     }
 
     @OnClick(R.id.cancel)
     public void cancelHandle() {
         //when you try to cancel signature show confirmation dialog
-        RxAlertDialog.createAlert(getActivity(), R.string.acceptsdk_dialog_cancel_signature_request_message, R.string.yes, R.string.no)
+        dialog = RxAlertDialog.createAlert(getActivity(), R.string.acceptsdk_dialog_cancel_signature_request_message, R.string.yes, R.string.no)
                 //filter only positive button and ignore negative
                 .filter(btn -> btn)
                 .subscribe(click -> confirmRequestWrapper.cancel());
@@ -88,19 +89,17 @@ public class SignatureFragment extends BaseFragment {
     }
 
     public void showProgress(){
-        if(barProgressDialog == null) {
-            barProgressDialog = new ProgressDialog(getActivity(), R.style.AppTheme_Dark_Dialog);
-//            barProgressDialog.setTitle("Signature");
-            barProgressDialog.setMessage("Uploading signature ...");
-            barProgressDialog.setIndeterminate(true);
-        }
-        barProgressDialog.show();
+       dialog = RxProgressDialog.create(getActivity(), "Uploading signature ...").subscribe();
     }
 
     public void dissmissProgress(){
-        if(barProgressDialog != null){
-            barProgressDialog.dismiss();
-        }
+        RxHelper.unsubscribe(dialog);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxHelper.unsubscribe(dialog);
     }
 
     public void setLabel(String text){

@@ -54,7 +54,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         backend.setText(BuildConfig.apiPath);
-        //TODO resource
         String versionStr = String.format("Version: %s(%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
         version.setText(versionStr);
 

@@ -92,7 +92,6 @@ public class SignatureView extends View {
      * @return
      */
     public byte[] compressSignatureBitmapToPNG() {
-        //TODO IO scheduler
         final Bitmap scaledBitmap = Bitmap.createScaledBitmap(signatureBitmap, signatureBitmap.getWidth() / 2, signatureBitmap.getHeight() / 2, true);
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         scaledBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
@@ -162,19 +161,6 @@ public class SignatureView extends View {
         temp.remove(signaturePath);
 
         bundle.putSerializable("PATHS", new SVPathContainer(temp));
-    }
-
-    public void showSignature(Bundle bundle) {
-        if (bundle == null) return;
-        SVPathContainer con = (SVPathContainer) bundle.getSerializable("PATHS");
-        if (con == null) return;
-        paths.clear();
-        paths.addAll(con.getPaths());
-        for (SVPath p : paths) {
-            p.redraw();
-        }
-        signaturePath = new SVPath();
-        paths.add(signaturePath);
     }
 
     public static class SVPathContainer implements Serializable {

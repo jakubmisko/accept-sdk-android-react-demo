@@ -5,7 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.wirecard.accept.help.MyStringBuilder;
+import com.wirecard.accept.help.EnhancedStringBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,7 +33,7 @@ public class Receipt {
      * presentation of sdk receipt building and data getting
      *
      */
-    public void showReceipt() {
+    public AlertDialog showReceipt() {
         ReceiptLayountBuilder builder = new ReceiptLayountBuilder(context);
         builder.receiptNumber(ReceiptBuilder.getReceiptNumber(payment))
                 .merchantInfo(buildMerchantInfo())
@@ -66,22 +66,20 @@ public class Receipt {
         View view = builder.build();
 
 
-        new AlertDialog.Builder(context)
-//        .setTitle("Customer Receipt")
-//        .setNegativeButton(android.R.string.cancel, null)
+        return new AlertDialog.Builder(context)
                 .setView(view)
                 .show();
     }
 
     private static String buildMerchantInfo() {
-        MyStringBuilder sb = new MyStringBuilder(new StringBuilder());
-        sb.appendWithNextLine(ReceiptBuilder.getMerchantNameAndSurname())
-                .appendWithNextLine(ReceiptBuilder.getMerchantAddressLine1())
-                .appendWithNextLine(ReceiptBuilder.getMerchantAddressLine2())
+        EnhancedStringBuilder sb = new EnhancedStringBuilder(new StringBuilder());
+        sb.appendWithNewLine(ReceiptBuilder.getMerchantNameAndSurname())
+                .appendWithNewLine(ReceiptBuilder.getMerchantAddressLine1())
+                .appendWithNewLine(ReceiptBuilder.getMerchantAddressLine2())
                 .append(ReceiptBuilder.getMerchantAddressCity())
                 .append(" ")
-                .appendWithNextLine(ReceiptBuilder.getMerchantAddressZipCode())
-                .appendWithNextLine(ReceiptBuilder.getMerchantCountryCode());
+                .appendWithNewLine(ReceiptBuilder.getMerchantAddressZipCode())
+                .appendWithNewLine(ReceiptBuilder.getMerchantCountryCode());
         return sb.toString();
     }
 

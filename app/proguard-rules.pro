@@ -56,6 +56,7 @@
 
 # java 8 retrolambda
 -dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
 
 # picaso
 # ok http client

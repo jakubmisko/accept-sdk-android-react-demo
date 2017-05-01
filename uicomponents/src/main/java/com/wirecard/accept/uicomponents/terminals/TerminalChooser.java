@@ -101,16 +101,6 @@ public class TerminalChooser extends DialogFragment {
 
     private void setDialogApperance() {
         setCancelable(false);
-        //TODO change dialog size
-//        if(!softNullCheck(getDialog())) {
-//            RelativeLayout container = (RelativeLayout) getView().findViewById(R.id.container);
-//            container.getLayoutParams().height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-//        }
     }
 
-    //    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putInt("actualValId", radioGroup.getCheckedRadioButtonId());
-//    }
 }

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.wirecard.accept.R;
@@ -34,9 +33,6 @@ import rx.Subscription;
  * Basic payment flow controlling activity
  */
 public abstract class AbstractPaymentFlowActivity extends BaseActivity implements PaymentFlowController.PaymentFlowDelegate {
-    //container for fragments
-    @BindView(R.id.container)
-    View container;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     private Subscription receiver;
@@ -46,9 +42,6 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     private String TAG = getClass().getSimpleName();
 
 
-//    public PaymentFlowController getPaymentFlowController() {
-//        return paymentFlowController;
-//    }
 
     public void showPaymentFragment() {
         getSupportActionBar().setTitle("Payment");
@@ -97,7 +90,6 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
         Log.d(TAG, "onCreate: show payment fragment");
         receiver = RxBroadcastReceiver.create(this, new IntentFilter(Intent.ACTION_SCREEN_OFF))
                 .subscribe(intent -> paymentFragment.showPaymentResult(false));
-//        isDestroyed = false;
     }
 
     private void configureToolbar() {
@@ -109,16 +101,11 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     }
 
     abstract PaymentFlowController createNewController();
-
     abstract boolean isSignatureConfirmationInApplication();
-
-    private boolean isDestroyed = false; // To support Android 4.2, 4.2.2 ( < API 17 ).
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isDestroyed = true;
-//        handlePaymentInterrupted();
         RxHelper.unsubscribe(receiver);
         receiver = null;
         paymentFlowController.cancelPaymentFlow();
@@ -127,7 +114,7 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
     @Override
     protected void onPause() {
         super.onPause();
-//        handlePaymentInterrupted();
+        paymentFlowController.cancelPaymentFlow();
     }
 
     @Override
@@ -136,21 +123,11 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
         //fragment can be aceesed in on resume method
         paymentFragment.startPayment(paymentFlowController);
     }
-//    private void handlePaymentInterrupted() {
-//        if (signatureConfirmationDialog != null) {
-//            signatureConfirmationDialog.dismiss();
-//        }
-//        //paymentFlowController.cancelPaymentFlow();
-//    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
-
-//    private void runOnUiThreadIfNotDestroyed(final Runnable runnable) {
-//        if (!isDestroyed) runOnUiThread(runnable);
-//    }
 
     @Override
     public void onPaymentFlowUpdate(PaymentFlowController.Update update) {
@@ -199,13 +176,9 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
                 paymentFragment.showProgress(R.string.acceptsdk_progress__confirm_amount, false);
                 break;
             case WAITING_FOR_SIGNATURE_CONFIRMATION:
-//            paymentFragment.showProgress(R.string.acceptsdk_progress__confirm_signature, false);
                 showSignatureFragment(null);
                 signatureFragment.hideButtons();
                 signatureFragment.dissmissProgress();
-                //NPE :(
-                //Snackbar.make(container, "Confirm card holder's signature please.", Snackbar.LENGTH_SHORT).show();
-//                Toast.makeText(getApplication(), "Confirm card holder's signature please.", Toast.LENGTH_LONG).show();
                 signatureFragment.setLabel("Confirm card holder's signature please.");
                 //just need to show captured signature on display for confirm
                 break;
@@ -213,7 +186,6 @@ public abstract class AbstractPaymentFlowActivity extends BaseActivity implement
                 paymentFragment.showProgress(R.string.acceptsdk_progress__terminating, false);
                 break;
             case TRANSACTION_UPDATE:
-                //todo dismiss confirm dialog if present
                 paymentFragment.showProgress(R.string.acceptsdk_progress__tc_update, true);
                 break;
             case WRONG_SWIPE:

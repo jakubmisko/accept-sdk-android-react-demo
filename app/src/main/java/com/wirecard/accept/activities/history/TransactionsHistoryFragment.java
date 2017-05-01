@@ -69,7 +69,6 @@ public class TransactionsHistoryFragment extends BaseFragment<TransactionHistior
                         getPresenter().reverseOrRefund(p);
                         break;
                     default:
-                        //Toast.makeText(TransactionsHistoryFragment.this, action + "is not implemented", Toast.LENGTH_SHORT).show();
                         Snackbar.make(container, action + "is not implemented", Snackbar.LENGTH_SHORT).show();
                 }
 
@@ -101,30 +100,22 @@ public class TransactionsHistoryFragment extends BaseFragment<TransactionHistior
 
     public void notifyReverseRefund(AcceptBackendService.Response response) {
         if (response.hasError()) {
-//            Toast.makeText(this, response.getError().toString(), Toast.LENGTH_LONG).show();
             Snackbar.make(container, response.getError().toString(), Snackbar.LENGTH_SHORT).show();
         } else {
             recyclerView.getAdapter().notifyDataSetChanged();
-            //                ((PaymentArrayAdapter) listView.getAdapter()).notifyDataSetChanged();
             AcceptTransaction body = (AcceptTransaction) response.getBody();
             if (body.status == AcceptTransaction.Status.reversed) {
-//                Toast.makeText(this, R.string.reversed, Toast.LENGTH_LONG).show();
                 Snackbar.make(container, R.string.reversed, Snackbar.LENGTH_SHORT).show();
             } else if (body.status == AcceptTransaction.Status.refunded) {
-//                Toast.makeText(this, R.string.refunded, Toast.LENGTH_LONG).show();
                 Snackbar.make(container, R.string.refunded, Snackbar.LENGTH_SHORT).show();
             } else {
-//                Toast.makeText(this, R.string.reversed_or_refunded, Toast.LENGTH_LONG).show();
                 Snackbar.make(container, R.string.reversed_or_refunded, Snackbar.LENGTH_SHORT).show();
             }
         }
-//        loading.setVisibility(View.GONE);
         dissmisProgress();
     }
 
     public void unableToReverseRefund() {
-//        Toast.makeText(this, R.string.not_reversed_refunded, Toast.LENGTH_LONG).show();
-//        loading.setVisibility(View.GONE);
         Snackbar.make(container, R.string.not_reversed_refunded, Snackbar.LENGTH_SHORT).show();
         dissmisProgress();
     }

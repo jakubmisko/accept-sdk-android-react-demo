@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.wirecard.accept.activities.amount.NumpadFragment">
-<!-- todo app compat buttons? -->
     <TableLayout
         android:id="@+id/numpad"
         android:layout_width="fill_parent"
@@ -174,7 +173,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"
-        android:text="Please type amount of your payment"
+        android:text="@string/fragment_amount_label"
         android:textSize="20sp"
         android:layout_alignParentTop="true"/>
 
@@ -191,7 +190,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Pay"
+            android:text="@string/fragment_amount_pay"
             android:textSize="30sp"
             android:textColor="@color/white"/>
         <TextView

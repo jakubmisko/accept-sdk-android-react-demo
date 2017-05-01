@@ -98,11 +98,10 @@ public class FirmwareUpdateFragment extends BaseFragment<FirmwareUpdatePresenter
 
     public void showFailedDownloadAndExtract(){
         showFailedConnectingScreen();
-        //todo check this
         message_text.setText(R.string.fw_update_failed_download_and_extract);
     }
 
-    public void showBluetoothConnectionLostScreen() {
+    public void showBluetoothConnectionLost() {
         showProgress(R.string.bt_pairing_connection_lost);
     }
 
@@ -115,23 +114,13 @@ public class FirmwareUpdateFragment extends BaseFragment<FirmwareUpdatePresenter
         getActivity().finish();
     }
 
-
-//TODO back press will cancel fw update
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        getActivity().setResult(RESULT_CANCELED);
-//        getPresenter().cancelActualTask();
-//    }
-
-
     @Override
     public void onAdapterEvent(AdapterEvent adapterEvent) {
         Log.d(TAG, "onAdapterEvent: " + adapterEvent);
 
         switch (adapterEvent) {
             case ADAPTER_DISABLED:
-                showBluetoothConnectionLostScreen();
+                showBluetoothConnectionLost();
                 break;
             case ADAPTER_DISABLING:
             case ADAPTER_ENABLING:
@@ -148,10 +137,10 @@ public class FirmwareUpdateFragment extends BaseFragment<FirmwareUpdatePresenter
                         break;
                     case AdapterEvent.ACTION_IDLE_CONNECTION_LOST:
                         if (!getPresenter().isTerminalResetByApp() && !getPresenter().isFinishedUpdate())
-                            showBluetoothConnectionLostScreen();
+                            showBluetoothConnectionLost();
                         break;
                     case AdapterEvent.ACTION_IDLE_CONF_UPDATE_FAILED:
-                        showBluetoothConnectionLostScreen();
+                        showBluetoothConnectionLost();
                         break;
                 }
                 break;
@@ -200,18 +189,11 @@ public class FirmwareUpdateFragment extends BaseFragment<FirmwareUpdatePresenter
         getPresenter().onConnectionEstablished(restartRequired);
     }
 
+    //Not used methods
     @Override
-    public void onProcessStarted() {
-
-    }
-
+    public void onProcessStarted() {}
     @Override
-    public void onProcessUpdate(ProcessState processState) {
-
-    }
-
+    public void onProcessUpdate(ProcessState processState) {}
     @Override
-    public void onProcessFinished(ProcessResult processResult, Exception e) {
-
-    }
+    public void onProcessFinished(ProcessResult processResult, Exception e) {}
 }

@@ -31,11 +31,18 @@ public class PaymentRecyclerAdapter extends RecyclerView.Adapter<PaymentRecycler
     private Context context;
     private TransactionsHistoryFragment.HistoryPopupMenuCallback popupMenuCallback;
 
+    /**
+     * delete stored payments
+     */
     public void clear(){
         payments.clear();
 //        notifyDataSetChanged();
     }
 
+    /**
+     * set new list of payments
+     * @param payments list of payments
+     */
     public void setPayments(List<Payment> payments){
         this.payments.addAll(payments);
 //        notifyDataSetChanged();
@@ -46,6 +53,12 @@ public class PaymentRecyclerAdapter extends RecyclerView.Adapter<PaymentRecycler
         this.popupMenuCallback = popupMenuCallback;
     }
 
+    /**
+     * inflate transaction history layout
+     * @param parent view
+     * @param viewType view type
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -54,6 +67,11 @@ public class PaymentRecyclerAdapter extends RecyclerView.Adapter<PaymentRecycler
         return new ViewHolder(itemView);
     }
 
+    /**
+     * set data from payment to views in row
+     * @param holder view holding views in row
+     * @param position position of row
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Payment p = payments.get(position);
@@ -62,10 +80,20 @@ public class PaymentRecyclerAdapter extends RecyclerView.Adapter<PaymentRecycler
         holder.status.setImageDrawable(getStatusIcon(p.getStatus()));
     }
 
+    /**
+     *
+     * @return count of all stored items
+     */
     @Override
     public int getItemCount() {
         return payments.size();
     }
+
+    /**
+     * get icon drawable based on payment status
+     * @param status payment status
+     * @return icon representing given status
+     */
 
     private Drawable getStatusIcon(AcceptSDK.Status status) {
         switch (status) {

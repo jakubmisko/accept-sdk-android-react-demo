@@ -62,7 +62,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total : "/>
+                android:text="@string/receipt_total"/>
 
             <TextView
                 android:id="@+id/total"
@@ -84,7 +84,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Payment details"/>
+                android:text="@string/receipt_payment_details"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Status: "/>
+                    android:text="@string/receipt_status"/>
 
                 <TextView
                     android:id="@+id/status"
@@ -110,7 +110,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Transaction type: "/>
+                    android:text="@string/receipt_transaction_type"/>
 
                 <TextView
                     android:id="@+id/type"
@@ -133,7 +133,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Card number: "/>
+                        android:text="@string/receipt_card_number"/>
 
                     <TextView
                         android:id="@+id/card_number"
@@ -150,7 +150,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cardholder name: "/>
+                        android:text="@string/receipt_cardholder_name"/>
 
                     <TextView
                         android:id="@+id/cardholder_name"
@@ -167,7 +167,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Card type: "/>
+                        android:text="@string/receipt_card_type"/>
 
                     <TextView
                         android:id="@+id/card_type"
@@ -184,7 +184,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Authorization code: "/>
+                        android:text="@string/receipt_authorization_code"/>
 
                     <TextView
                         android:id="@+id/approval_code"
@@ -200,7 +200,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="Signature:"
+            android:text="@string/receipt_signature"
             android:visibility="gone"
             />
 
@@ -217,7 +217,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Payment issued by accept. by Wirecard"
+            android:text="@string/receipt_by_wirecard"
             android:layout_marginTop="20dp"
             />
     </LinearLayout>

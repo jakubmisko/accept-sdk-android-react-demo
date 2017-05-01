@@ -24,7 +24,6 @@ import static android.content.ContentValues.TAG;
 /**
  * Presentation logic of menu activity
  */
-//TODO rewrite with composition
 public class MenuPresenter extends RxPresenter<MenuActivity> {
     private Context context;
     private PaymentFlowController.Device device;
@@ -54,7 +53,7 @@ public class MenuPresenter extends RxPresenter<MenuActivity> {
                             //setup new data and remember
                             AcceptBackendService.Response<AcceptFirmwareVersion, Void> response = AcceptSDK.fetchFirmwareVersionInfo();
                             if (response == null || response.hasError()) {
-                                //TODO wrap error to exception
+                                //just trigger error behaviour
                                 subscriber.onError(new Throwable());
                             } else {
                                 subscriber.onNext(response);
